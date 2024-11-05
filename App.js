@@ -1,15 +1,19 @@
-import {
-  NavigationContainer,
-  NavigationRouteContext,
-} from "@react-navigation/native";
-import { Choice } from "./src/pages/Choice";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Character from "./src/pages/Character";
 
-export function App() {
-  const Stack = createStackNavigator();
+const Stack = createStackNavigator();
+
+export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Choice" component={Choice} />
+        <Stack.Screen
+          name="Choice"
+          options={{ headerShown: false }}
+          component={Character}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
