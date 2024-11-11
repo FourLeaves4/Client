@@ -53,13 +53,13 @@ export default function Start({ navigation }) {
       <View style={styles.button}>
         <TouchableOpacity
           style={styles.button_start}
-          onPress={() => navigation.navigate('Start')}
+          onPress={() => navigation.navigate('Questions')}
         >
           <Text style={styles.buttonText}>시작하기</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button_login}
-          onPress={() => navigation.navigate('Start')}
+          onPress={() => navigation.navigate('Login')}
         >
           <Text style={styles.buttonText}>로그인하기</Text>
         </TouchableOpacity>
