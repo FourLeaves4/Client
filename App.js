@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Character from './src/pages/Character';
 import Start from './src/pages/start';
 import Questions from './src/pages/question';
-import Login from './src/pages/Login';
+import Login from './src/pages/login';
 
 const Stack = createStackNavigator();
 
