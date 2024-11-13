@@ -77,10 +77,8 @@ const styles = StyleSheet.create({
   title: {
     paddingTop: 100,
     flex: 0.5,
-    //backgroundColor: 'white',
     color: '#FBF15B',
     fontSize: 100,
-    //justifyContent: 'flex-end',
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -92,13 +90,11 @@ const styles = StyleSheet.create({
   slide: {
     flex: 1,
     justifyContent: 'center',
-    //backgroundColor: 'pink',
   },
   button: {
     flex: 0.5,
     justifyContent: 'flex-end',
-    paddingBottom: 82,
-    //backgroundColor: 'green',
+    paddingBottom: 80,
   },
   button_start: {
     backgroundColor: '#FBF15B',
@@ -113,7 +109,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 12,
-    //marginBottom: 10,
     width: 345,
   },
   buttonText: {
