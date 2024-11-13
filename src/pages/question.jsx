@@ -17,7 +17,10 @@ export default function Question({ navigation }) {
       <TouchableOpacity style={styles.button_answer}>
         <Text style={styles.answerText}>모르겠어요</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button_next}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Character')}
+        style={styles.button_next}
+      >
         <Text style={styles.buttonText}>다음</Text>
       </TouchableOpacity>
     </View>
