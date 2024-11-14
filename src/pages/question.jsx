@@ -1,6 +1,21 @@
+import axios from 'axios';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+
+const url = '';
 export default function Question({ navigation }) {
+  function sendData(number) {
+    axios
+      .post(`${url}/major`, {
+        answer: number,
+      })
+      .then((res) => {
+        navigation.navigate('Character');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.title}>간단한 설문조사를 시작할게요!</Text>
@@ -17,10 +32,7 @@ export default function Question({ navigation }) {
       <TouchableOpacity style={styles.button_answer}>
         <Text style={styles.answerText}>모르겠어요</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Character')}
-        style={styles.button_next}
-      >
+      <TouchableOpacity onPress={sendData} style={styles.button_next}>
         <Text style={styles.buttonText}>다음</Text>
       </TouchableOpacity>
     </View>
