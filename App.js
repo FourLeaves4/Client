@@ -7,7 +7,7 @@ const MyDarkTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: '#000', // 기본 배경을 검정색으로 설정
+    background: '#000', // 기본 배경을 검정색으로 설정함
   },
 };
 
