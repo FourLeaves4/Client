@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import ProfileCard from '../components/ProfileCard';
+import ProfileCard from '../components/ProfileCard.jsx';
 
 function HomeScreen() {
   return (

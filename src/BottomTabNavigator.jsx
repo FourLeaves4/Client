@@ -1,9 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from './pages/HomeScreen';
-import AICounselScreen from './pages/AICounselScreen';
-import PlanScreen from './pages/PlanScreen';
-import MyScreen from './pages/MyScreen';
+import HomeScreen from './pages/HomeScreen.jsx';
+import AICounselScreen from './pages/AICounselScreen.jsx';
+import PlanScreen from './pages/PlanScreen.jsx';
+import MyScreen from './pages/MyScreen.jsx';
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
