@@ -1,7 +1,12 @@
 import React from 'react';
 import { View, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Start from './src/pages/start';
+import Questions from './src/pages/question';
 import BottomTabNavigator from './src/BottomTabNavigator';
+
+const Stack = createStackNavigator();
 
 const MyDarkTheme = {
   ...DefaultTheme,
@@ -14,8 +19,24 @@ const MyDarkTheme = {
 export default function App() {
   return (
     <NavigationContainer theme={MyDarkTheme}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Start"
+          options={{ headerShown: false }}
+          component={Start}
+        />
+        <Stack.Screen
+          name="Questions"
+          options={{ headerShown: false }}
+          component={Questions}
+        />
+        <Stack.Screen
+          name="Main"
+          options={{ headerShown: false }}
+          component={BottomTabNavigator}
+        />
+      </Stack.Navigator>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
-      <BottomTabNavigator />
     </NavigationContainer>
   );
 }
