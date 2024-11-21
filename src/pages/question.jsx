@@ -41,22 +41,36 @@ export default function Question({ navigation }) {
   const [selectedAnswers, setSelectedAnswers] = useState({});
 
   function sendData() {
+    console.log('sendData 호출됨');
+    navigation.navigate('Character');
+    /*
     axios
       .post(`${url}/major`, { answers: selectedAnswers })
       .then((res) => {
+        console.log('응답 받음', res);
         navigation.navigate('Character');
       })
       .catch((err) => {
         console.log(err);
-      });
+      });*/
   }
 
   function handleAnswer(questionId, answer) {
-    setSelectedAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [questionId]: answer,
-    }));
+    setSelectedAnswers((prevAnswers) => {
+      // 기존에 선택된 답변과 동일하면 취소, 아니면 새로 선택
+      if (prevAnswers[questionId] === answer) {
+        const { [questionId]: _, ...rest } = prevAnswers;
+        return rest;
+      } else {
+        return { ...prevAnswers, [questionId]: answer };
+      }
+    });
   }
+
+  // 모든 질문에 대해 답변이 선택되었는지 확인
+  const isAllAnswered = questions.every((question) =>
+    selectedAnswers.hasOwnProperty(question.id)
+  );
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -64,18 +78,36 @@ export default function Question({ navigation }) {
       {questions.map((question) => (
         <View key={question.id} style={styles.questionContainer}>
           <Text style={styles.question}>{question.text}</Text>
-          {question.answers.map((answer, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.button_answer}
-              onPress={() => handleAnswer(question.id, answer)}
-            >
-              <Text style={styles.answerText}>{answer}</Text>
-            </TouchableOpacity>
-          ))}
+          {question.answers.map((answer, index) => {
+            const isSelected = selectedAnswers[question.id] === answer;
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.button_answer,
+                  isSelected && styles.selectedAnswerButton,
+                  isSelected && styles.selectedAnswerBorder, // 선택된 답변 테두리 색 변경
+                ]}
+                onPress={() => handleAnswer(question.id, answer)}
+              >
+                <Text
+                  style={[
+                    styles.answerText,
+                    isSelected && styles.selectedAnswerText, // 선택된 답변 글씨 색 변경
+                  ]}
+                >
+                  {answer}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       ))}
-      <TouchableOpacity onPress={sendData} style={styles.button_next}>
+      <TouchableOpacity
+        onPress={sendData}
+        style={[styles.button_next, !isAllAnswered && styles.buttonDisabled]}
+        disabled={!isAllAnswered} // 답변이 모두 선택되지 않으면 버튼 비활성화
+      >
         <Text style={styles.buttonText}>다음</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -113,10 +145,20 @@ const styles = StyleSheet.create({
     marginTop: 24,
     width: 345,
   },
+  selectedAnswerButton: {
+    backgroundColor: 'rgba(255, 241, 91, 0.1)', // 배경색만 10% 투명도 적용 (rgba 형식으로 색상과 투명도 설정)
+  },
+  selectedAnswerBorder: {
+    borderColor: '#FBF15B', // 선택된 답변의 테두리 색
+    borderWidth: 2,
+  },
   answerText: {
     color: '#ffffff',
     fontSize: 18,
     textAlign: 'center',
+  },
+  selectedAnswerText: {
+    color: '#FBF15B', // 선택된 답변의 글씨 색
   },
   button_next: {
     marginTop: 52,
@@ -125,6 +167,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 12,
     width: 345,
+  },
+  buttonDisabled: {
+    backgroundColor: '#6D6C52', // 비활성화된 버튼 색
   },
   buttonText: {
     color: '#000000',
