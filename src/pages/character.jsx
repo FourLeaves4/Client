@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native'; // Image 제거
 
 export default function App() {
   return (
     <View style={styles.box}>
       <View style={styles.group}>
         <View style={styles.frame}>
-          <Image style={styles.star} source={require('./img/star-1.png')} />
+          {/* <Image style={styles.star} source={require('./img/star-1.png')} /> */}
           <View style={styles.divWrapper}>
             <Text style={styles.textWrapper}>NOVA</Text>
           </View>
@@ -35,10 +35,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: 137,
     position: 'relative',
-  },
-  star: {
-    width: 33.51,
-    height: 32.7,
   },
   divWrapper: {
     width: 88,
