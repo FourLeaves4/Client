@@ -6,6 +6,7 @@ import Start from './src/pages/start';
 import Questions from './src/pages/question';
 import BottomTabNavigator from './src/BottomTabNavigator';
 import Character from './src/pages/character';
+import Home from './src/pages/HomeScreen';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,11 @@ export default function App() {
           name="Character"
           options={{ headerShown: false }}
           component={Character}
+        />
+        <Stack.Screen
+          name="Home"
+          options={{ headerShown: false }}
+          component={Home}
         />
       </Stack.Navigator>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
