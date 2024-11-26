@@ -23,7 +23,9 @@ function BottomTabNavigator() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           // route.name을 기반으로 아이콘을 설정
-          const iconName = focused ? icons[route.name].focused : icons[route.name].unfocused;
+          const iconName = focused
+            ? icons[route.name].focused
+            : icons[route.name].unfocused;
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: '#FBF15B', // 활성화된 아이콘 색상
@@ -33,9 +35,21 @@ function BottomTabNavigator() {
         headerShown: false, // Stack Navigator 헤더를 숨김
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} options={{ title: '홈' }} />
-      <Tab.Screen name="AI Counsel" component={AICounselScreen} options={{ title: '상담' }} />
-      <Tab.Screen name="Plan" component={PlanScreen} options={{ title: '플랜' }} />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: '홈' }}
+      />
+      <Tab.Screen
+        name="AI Counsel"
+        component={AICounselScreen}
+        options={{ title: '상담' }}
+      />
+      <Tab.Screen
+        name="Plan"
+        component={PlanScreen}
+        options={{ title: '플랜' }}
+      />
       <Tab.Screen name="My" component={MyScreen} options={{ title: 'MY' }} />
     </Tab.Navigator>
   );

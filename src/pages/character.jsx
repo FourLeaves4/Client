@@ -25,6 +25,13 @@ export default function App({ navigation }) {
       location_2: 'spring, java 등을 배워보신 분들에게 추천',
       image: require('../../assets/character3.png'), // 세 번째 캐릭터 이미지
     },
+    {
+      id: 4,
+      name: 'iOS',
+      location_1: 'swift 언어나 애플에 관심이 있거나',
+      location_2: '앱 개발에 관심이 있으신 분들에게 추천',
+      image: require('../../assets/character4.png'), // 세 번째 캐릭터 이미지
+    },
   ];
 
   // 현재 선택된 캐릭터 인덱스 상태 관리
@@ -50,27 +57,25 @@ export default function App({ navigation }) {
 
       {/* 로고 및 텍스트 표시 */}
       <View style={styles.box}>
-        <View style={styles.group}>
-          <View style={styles.frame}>
-            <View style={styles.iconTextWrapper}>
-              <Image
-                style={styles.star}
-                source={require('../../assets/Star 1.png')}
-              />
-              <Text style={styles.textWrapper}>
-                {characters[currentIndex].name}
-              </Text>
-            </View>
-            <Text style={styles.explain}>
-              {characters[currentIndex].location_1}
+        <View style={styles.frame}>
+          <View style={styles.iconTextWrapper}>
+            <Image
+              style={styles.star}
+              source={require('../../assets/Star 1.png')}
+            />
+            <Text style={styles.textWrapper}>
+              {characters[currentIndex].name}
             </Text>
-            <Text style={styles.explain}>
-              {characters[currentIndex].location_2}
-            </Text>
-            <TouchableOpacity style={styles.smallButton}>
-              <Text style={styles.smallButtonText}>추천 전공</Text>
-            </TouchableOpacity>
           </View>
+          <Text style={styles.explain}>
+            {characters[currentIndex].location_1}
+          </Text>
+          <Text style={styles.explain}>
+            {characters[currentIndex].location_2}
+          </Text>
+          <TouchableOpacity style={styles.smallButton}>
+            <Text style={styles.smallButtonText}>추천 전공</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -105,7 +110,7 @@ export default function App({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 64,
+    marginTop: 60,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -115,6 +120,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40, // 화면 위에서의 거리
     left: 20, // 화면 왼쪽에서의 거리
+    //backgroundColor: 'yellow',
   },
   headerText: {
     fontSize: 20,
@@ -123,20 +129,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   box: {
+    //backgroundColor: 'pink',
     justifyContent: 'center',
     alignItems: 'flex-end',
     width: '100%',
     marginRight: 24,
   },
-  group: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   frame: {
+    //backgroundColor: 'blue',
     flexDirection: 'column',
     alignItems: 'flex-end',
   },
   iconTextWrapper: {
+    //backgroundColor: 'red',
+    justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -172,28 +178,32 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   characterContainer: {
+    //backgroundColor: 'yellow',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 20,
   },
   arrowButton: {
+    //backgroundColor: 'blue',
     padding: 10,
   },
   arrowText: {
+    //backgroundColor: 'yellow',
     fontSize: 24,
     color: '#fff',
   },
   characterImage: {
+    //backgroundColor: 'white',
     width: 200,
     height: 300,
     resizeMode: 'contain',
     marginHorizontal: 32,
   },
   button: {
+    //backgroundColor: 'pink',
     flex: 0.5,
     justifyContent: 'flex-end',
-    marginBottom: 80,
   },
   button_start: {
     backgroundColor: '#fff',
