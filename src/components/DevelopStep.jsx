@@ -12,10 +12,9 @@ const DeveloperStep = () => {
         </View>
         {/* 이미지 */}
         <Image
-         style={styles.element}
-        source={require('../assets/icon.png')} // 존재하는 다른 이미지로 변경
+          style={styles.element}
+          source={require('../../assets/badge.png')}
         />
-
       </View>
     </View>
   );
@@ -26,7 +25,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: 345,
     height: 96,
-    marginTop: 20, // 필요한 경우 조정
+    marginTop: 50, // 필요한 경우 조정
   },
   group: {
     position: 'absolute',
@@ -56,7 +55,7 @@ const styles = StyleSheet.create({
   },
   textWrapper2: {
     position: 'absolute',
-    top: -1,
+    top: 6,
     left: 91,
     textShadowColor: '#ffffff21', // -webkit-text-stroke 대체
     textShadowOffset: { width: 1, height: 1 },
