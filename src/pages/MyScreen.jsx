@@ -6,6 +6,7 @@ import LevelLabel from '../components/LevelLabel';
 import DeveloperStep from '../components/DevelopStep';
 import DeveloperStageButton from '../components/DeveloperStageButton';
 import CompletionLabel from '../components/CompletionLabel';
+import GrassBoard from '../components/GrassBoard';
 export default function MyScreen() {
   return (
     <View style={styles.container}>
@@ -17,6 +18,8 @@ export default function MyScreen() {
         <DeveloperStep />
         <DeveloperStageButton />
         <CompletionLabel />
+        <GrassBoard />
+
       </View>
       
       {/* 다른 UI 요소들 추가 */}
