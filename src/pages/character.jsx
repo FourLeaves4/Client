@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useFonts } from 'expo-font';
 
 export default function App({ navigation }) {
+  // 폰트 로드
+  const [fontsLoaded] = useFonts({
+    'Jaro-Regular': require('../../assets/Jaro-Regular.ttf'), // 폰트 로드
+  });
   // 캐릭터 데이터 배열
   const characters = [
     {
