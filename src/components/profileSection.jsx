@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   wrapper: {
     marginTop: 50, // 원하는 위치로 이동
     marginLeft: 0, // 왼쪽으로부터 20px
-    marginBottom: 500,
+    marginBottom: 40,
   },
   box: {
     width: 299,
