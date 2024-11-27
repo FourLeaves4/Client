@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import ProfileSection from '../components/profileSection';
+import LevelBarSection from '../components/LevelBarSection';
 
 export default function MyScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>My Screen</Text>
+      <ProfileSection />
+      <LevelBarSection />
     </View>
   );
 }

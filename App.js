@@ -6,7 +6,6 @@ import Start from './src/pages/start';
 import Questions from './src/pages/question';
 import BottomTabNavigator from './src/BottomTabNavigator';
 import Character from './src/pages/character';
-import Home from './src/pages/HomeScreen';
 
 const Stack = createStackNavigator();
 // 스택 네비게이터를 생성하며, 앱에서 사용할 화면들을 쌓는 방식으로 관리
