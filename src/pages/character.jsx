@@ -99,7 +99,7 @@ export default function App({ navigation }) {
       <View style={styles.button}>
         <TouchableOpacity
           style={styles.button_start}
-          onPress={() => navigation.navigate('Main')} // 버튼 클릭 시 Main 화면으로 이동
+          onPress={() => navigation.navigate('Main', { screen: 'Home' })} // 수정된 부분
         >
           <Text style={styles.buttonText}>구글로 시작하기</Text>
         </TouchableOpacity>

@@ -9,6 +9,8 @@ import Character from './src/pages/character';
 import Home from './src/pages/HomeScreen';
 
 const Stack = createStackNavigator();
+// 스택 네비게이터를 생성하며, 앱에서 사용할 화면들을 쌓는 방식으로 관리
+// 화면 간 이동 시 이전 화면이 스택에 유지되어 뒤로가기 버튼을 통해 다시 돌아갈 수 있다.
 
 const MyDarkTheme = {
   ...DefaultTheme,
@@ -33,19 +35,14 @@ export default function App() {
           component={Questions}
         />
         <Stack.Screen
-          name="Main"
-          options={{ headerShown: false }}
-          component={BottomTabNavigator}
-        />
-        <Stack.Screen
           name="Character"
           options={{ headerShown: false }}
           component={Character}
         />
         <Stack.Screen
-          name="Home"
+          name="Main"
           options={{ headerShown: false }}
-          component={Home}
+          component={BottomTabNavigator}
         />
       </Stack.Navigator>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
