@@ -83,7 +83,10 @@ export default function App({ navigation }) {
     if (selectedCharacter === null) {
       Alert.alert('캐릭터 선택', '캐릭터를 선택해주세요');
     } else {
-      navigation.navigate('Main', { screen: 'Home' });
+      navigation.navigate('Main', {
+        screen: 'Home',
+        params: { selectedCharacter: characters[currentIndex] }, // 선택된 캐릭터 데이터 전달
+      });
     }
   };
 
