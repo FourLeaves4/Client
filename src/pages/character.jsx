@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import { useFonts } from 'expo-font';
 
 export default function App({ navigation }) {
@@ -7,6 +14,7 @@ export default function App({ navigation }) {
   const [fontsLoaded] = useFonts({
     'Jaro-Regular': require('../../assets/Jaro-Regular.ttf'), // 폰트 로드
   });
+
   // 캐릭터 데이터 배열
   const characters = [
     {
@@ -48,6 +56,7 @@ export default function App({ navigation }) {
 
   // 현재 선택된 캐릭터 인덱스 상태 관리
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedCharacter, setSelectedCharacter] = useState(null); // 선택된 캐릭터 상태
 
   // 화살표 버튼 클릭 이벤트 핸들러
   const handleNext = () => {
@@ -58,6 +67,27 @@ export default function App({ navigation }) {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? characters.length - 1 : prevIndex - 1
     ); // 이전 캐릭터
+  };
+
+  // 캐릭터 선택 및 선택 취소 함수
+  const handleCharacterSelect = (index) => {
+    if (selectedCharacter === index) {
+      setSelectedCharacter(null); // 이미 선택된 캐릭터를 다시 클릭하면 선택 취소
+    } else {
+      setSelectedCharacter(index); // 캐릭터 선택
+    }
+  };
+
+  // 구글 로그인 버튼 클릭 이벤트 핸들러
+  const handleLogin = () => {
+    if (selectedCharacter === null) {
+      Alert.alert('캐릭터 선택', '캐릭터를 선택해주세요');
+    } else {
+      navigation.navigate('Main', {
+        screen: 'Home',
+        params: { selectedCharacter: characters[currentIndex] }, // 선택된 캐릭터 데이터 전달
+      });
+    }
   };
 
   return (
@@ -100,10 +130,18 @@ export default function App({ navigation }) {
           />
         </TouchableOpacity>
 
-        <Image
-          style={styles.characterImage}
-          source={characters[currentIndex].image}
-        />
+        <TouchableOpacity
+          onPress={() => handleCharacterSelect(currentIndex)} // 캐릭터 선택/취소
+          style={[
+            styles.characterImageWrapper,
+            selectedCharacter === currentIndex && styles.selectedCharacter, // 선택된 캐릭터 스타일
+          ]}
+        >
+          <Image
+            style={styles.characterImage}
+            source={characters[currentIndex].image}
+          />
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={handleNext} style={styles.arrowButton}>
           <Image
@@ -115,10 +153,7 @@ export default function App({ navigation }) {
 
       {/* 구글로 시작하기 버튼 */}
       <View style={styles.button}>
-        <TouchableOpacity
-          style={styles.button_start}
-          onPress={() => navigation.navigate('Main', { screen: 'Home' })}
-        >
+        <TouchableOpacity style={styles.button_start} onPress={handleLogin}>
           <Text style={styles.buttonText}>구글로 시작하기</Text>
         </TouchableOpacity>
       </View>
@@ -143,7 +178,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 12,
     color: '#fff',
-    //fontWeight: 'bold',
   },
   box: {
     justifyContent: 'center',
@@ -205,11 +239,17 @@ const styles = StyleSheet.create({
     height: 32,
     resizeMode: 'contain',
   },
+  characterImageWrapper: {
+    marginHorizontal: 32,
+  },
   characterImage: {
     width: 200,
     height: 300,
     resizeMode: 'contain',
-    marginHorizontal: 32,
+  },
+  selectedCharacter: {
+    borderColor: '#fbf15b', // 선택된 캐릭터에 테두리 추가
+    borderWidth: 4,
   },
   button: {
     flex: 0.5,
