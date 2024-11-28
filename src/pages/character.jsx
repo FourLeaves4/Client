@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useFonts } from 'expo-font';
 
 export default function App({ navigation }) {
+  // 폰트 로드
+  const [fontsLoaded] = useFonts({
+    'Jaro-Regular': require('../../assets/Jaro-Regular.ttf'), // 폰트 로드
+  });
   // 캐릭터 데이터 배열
   const characters = [
     {
@@ -30,7 +35,14 @@ export default function App({ navigation }) {
       name: 'iOS',
       location_1: 'swift 언어나 애플에 관심이 있거나',
       location_2: '앱 개발에 관심이 있으신 분들에게 추천',
-      image: require('../../assets/character4.png'), // 세 번째 캐릭터 이미지
+      image: require('../../assets/character4.png'), // 네 번째 캐릭터 이미지
+    },
+    {
+      id: 5,
+      name: 'Android',
+      location_1: '안드로이드나',
+      location_2: '앱 개발에 관심이 있으신 분들에게 추천',
+      image: require('../../assets/character3.png'), // 다섯 번째 캐릭터 이미지
     },
   ];
 
@@ -52,7 +64,7 @@ export default function App({ navigation }) {
     <View style={styles.container}>
       {/* 왼쪽 상단에 "캐릭터 선택하기" 추가 */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>캐릭터 선택하기</Text>
+        <Text style={styles.headerText}>{'<    '}캐릭터 선택</Text>
       </View>
 
       {/* 로고 및 텍스트 표시 */}
@@ -82,7 +94,10 @@ export default function App({ navigation }) {
       {/* 캐릭터 이미지와 화살표 */}
       <View style={styles.characterContainer}>
         <TouchableOpacity onPress={handlePrevious} style={styles.arrowButton}>
-          <Text style={styles.arrowText}>{'<'}</Text>
+          <Image
+            style={styles.arrowImage}
+            source={require('../../assets/circle-arrow-left.png')}
+          />
         </TouchableOpacity>
 
         <Image
@@ -91,7 +106,10 @@ export default function App({ navigation }) {
         />
 
         <TouchableOpacity onPress={handleNext} style={styles.arrowButton}>
-          <Text style={styles.arrowText}>{'>'}</Text>
+          <Image
+            style={styles.arrowImage}
+            source={require('../../assets/circle-arrow-right.png')}
+          />
         </TouchableOpacity>
       </View>
 
@@ -99,7 +117,7 @@ export default function App({ navigation }) {
       <View style={styles.button}>
         <TouchableOpacity
           style={styles.button_start}
-          onPress={() => navigation.navigate('Main', { screen: 'Home' })} // 수정된 부분
+          onPress={() => navigation.navigate('Main', { screen: 'Home' })}
         >
           <Text style={styles.buttonText}>구글로 시작하기</Text>
         </TouchableOpacity>
@@ -110,7 +128,7 @@ export default function App({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 60,
+    marginTop: 40,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -118,30 +136,26 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: 40, // 화면 위에서의 거리
-    left: 20, // 화면 왼쪽에서의 거리
-    //backgroundColor: 'yellow',
+    top: 40,
+    left: 20,
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 18,
     marginLeft: 12,
     color: '#fff',
-    fontWeight: 'bold',
+    //fontWeight: 'bold',
   },
   box: {
-    //backgroundColor: 'pink',
     justifyContent: 'center',
     alignItems: 'flex-end',
     width: '100%',
     marginRight: 24,
   },
   frame: {
-    //backgroundColor: 'blue',
     flexDirection: 'column',
     alignItems: 'flex-end',
   },
   iconTextWrapper: {
-    //backgroundColor: 'red',
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
@@ -178,30 +192,26 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   characterContainer: {
-    //backgroundColor: 'yellow',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 20,
   },
   arrowButton: {
-    //backgroundColor: 'blue',
     padding: 10,
   },
-  arrowText: {
-    //backgroundColor: 'yellow',
-    fontSize: 24,
-    color: '#fff',
+  arrowImage: {
+    width: 32,
+    height: 32,
+    resizeMode: 'contain',
   },
   characterImage: {
-    //backgroundColor: 'white',
     width: 200,
     height: 300,
     resizeMode: 'contain',
     marginHorizontal: 32,
   },
   button: {
-    //backgroundColor: 'pink',
     flex: 0.5,
     justifyContent: 'flex-end',
   },
