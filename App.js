@@ -6,6 +6,8 @@ import Start from './src/pages/start';
 import Questions from './src/pages/question';
 import BottomTabNavigator from './src/BottomTabNavigator';
 import Character from './src/pages/character';
+import MyScreen from './src/pages/MyScreen';
+import DeveloperStageScreen from './src/pages/DeveloperStageScreen';
 
 const Stack = createStackNavigator();
 // 스택 네비게이터를 생성하며, 앱에서 사용할 화면들을 쌓는 방식으로 관리
@@ -38,11 +40,23 @@ export default function App() {
           options={{ headerShown: false }}
           component={Character}
         />
+
         <Stack.Screen
           name="Main"
           options={{ headerShown: false }}
           component={BottomTabNavigator}
         />
+        <Stack.Screen
+          name="MyScreen"
+          component={MyScreen}
+          options={{ headerShown: false }} // 헤더 숨김
+        />
+        <Stack.Screen
+          name="DeveloperStageScreen"
+          component={DeveloperStageScreen}
+          options={{ headerShown: false }} // 헤더 숨김
+        />
+        
       </Stack.Navigator>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
     </NavigationContainer>

@@ -1,10 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ChevronRight from '../../assets/chevron-right.svg'; // SVG 파일 import
-
+import { useNavigation } from '@react-navigation/native';
 const DeveloperStageButton = () => {
+
+  const navigation = useNavigation();
+
   return (
-    <TouchableOpacity style={styles.box}>
+    <TouchableOpacity
+     style={styles.box}
+     onPress={() => navigation.navigate('DeveloperStageScreen')} // 페이지 이동
+     >
       <View style={styles.group}>
         <View style={styles.frame}>
           {/* 왼쪽 텍스트 그룹 */}
