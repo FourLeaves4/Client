@@ -4,7 +4,7 @@
     "slug": "four",
     "version": "1.0.0",
     "extra": {
-      "OPENAI_API_KEY": "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"
+       "OPENAI_API_KEY": "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"
     },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
