@@ -10,7 +10,7 @@ const MessageBox = ({ message, highlight }) => {
         </Text>
         <Text style={styles.subMessage}>조금만 더 힘내볼까요? 🔥</Text>
       </View>
-      <Image source={require("../../../assets/polygon.png")} style={styles.triangle} />
+      <Image source={require("../../../assets/Mascot.png")} style={styles.triangle} />
     </View>
   );
 };
