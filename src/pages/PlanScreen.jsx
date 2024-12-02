@@ -17,6 +17,7 @@ const PlanScreen = () => {
         message="이번 주 평균 달성률은"
         highlight="60%"
       />
+      <LabeledDivider title="요일별 달성률" />
     </View>
   );
 };

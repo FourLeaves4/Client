@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   component: {
     position: "relative",
     width: "100%", // 전체 너비
-    height: 30, // 컨테이너 높이
+    height: 40, // 컨테이너 높이
     flexDirection: "row", // 텍스트와 선을 가로로 배치
     alignItems: "center", // 세로 중앙 정렬
     justifyContent: "left", // 텍스트를 중앙에 위치
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     fontFamily: "Pretendard-Regular",
     color: "#ffffff", // 흰색 텍스트
     marginHorizontal: 10, // 텍스트와 선 간의 간격
-    marginLeft: 24,
+    marginLeft: 26,
   },
   line: {
     height: 1, // 선의 두께
