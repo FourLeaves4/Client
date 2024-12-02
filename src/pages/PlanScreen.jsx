@@ -4,6 +4,7 @@ import DateDisplay from "../components/DataDisplay";
 import TimeDisplay from "../components/TimeDisplay";
 import LabeledDivider from "../components/LabeledDivider";
 import MascotWithMessage from "../components/MascotWithMessage/MascotWithMessage";
+import WeeklyProgressChart from "../components/WeeklyProgressChart";
 
 const PlanScreen = () => {
   return (
@@ -18,6 +19,7 @@ const PlanScreen = () => {
         highlight="60%"
       />
       <LabeledDivider title="요일별 달성률" />
+      <WeeklyProgressChart />
     </View>
   );
 };
