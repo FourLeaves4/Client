@@ -4,7 +4,6 @@
     "slug": "four",
     "version": "1.0.0",
     "extra": {
-       "OPENAI_API_KEY": "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"
     },
     "orientation": "portrait",
     "icon": "./assets/icon.png",

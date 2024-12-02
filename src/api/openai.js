@@ -1,7 +1,7 @@
 import axios from "axios";
-import Constants from "expo-constants";
+import { OPENAI_API_KEY } from '@env';
 
-const apiKey = Constants.expoConfig.extra.OPENAI_API_KEY;
+const apiKey = OPENAI_API_KEY;
 
 export const getAIResponse = async (userMessage) => {
   try {
