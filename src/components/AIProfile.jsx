@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 76,
     marginTop: 100,
-    marginBottom: 50,
+    marginBottom: 40,
   },
   ellipse: {
     width: 80,

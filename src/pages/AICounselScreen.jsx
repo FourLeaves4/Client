@@ -93,7 +93,7 @@ const AICounselScreen = () => {
       {/* 로딩 상태 표시 */}
       {isLoading && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" color="#4CAF50" />
+          <ActivityIndicator size="small" color="#FBF15B" />
           <Text style={styles.loadingText}>AI가 응답 중입니다...</Text>
         </View>
       )}
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   userBubble: {
     alignSelf: "flex-end",
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#C1AF3D",
   },
   aiBubble: {
     alignSelf: "flex-start",
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#C1AF3D",
     borderRadius: 20,
   },
   sendButtonText: {
