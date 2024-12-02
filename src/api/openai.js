@@ -1,6 +1,9 @@
 import axios from "axios";
 import { OPENAI_API_KEY } from '@env';
 
+// 환경 변수가 제대로 로드되었는지 확인
+console.log("Loaded API Key:", OPENAI_API_KEY);
+
 const apiKey = OPENAI_API_KEY;
 
 export const getAIResponse = async (userMessage) => {
