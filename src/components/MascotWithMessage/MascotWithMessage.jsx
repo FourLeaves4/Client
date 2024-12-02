@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row", // Mascot과 MessageBox를 가로로 정렬
     alignItems: "center",
-    margin: 16,
+    marginTop: 30,
+    marginLeft: 8,
   },
 });
 
