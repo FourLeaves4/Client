@@ -3,6 +3,9 @@
     "name": "four",
     "slug": "four",
     "version": "1.0.0",
+    "extra": {
+      "OPENAI_API_KEY": "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"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -11,7 +14,9 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+      
     },
+    
     "ios": {
       "supportsTablet": true
     },
