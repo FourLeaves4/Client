@@ -22,8 +22,9 @@ const styles = StyleSheet.create({
     height: 147,
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 85,
+    marginLeft: 76,
     marginTop: 100,
+    marginBottom: 50,
   },
   ellipse: {
     width: 80,

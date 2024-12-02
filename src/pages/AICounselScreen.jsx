@@ -1,20 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
-  Button,
   Text,
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
+  ActivityIndicator,
   StyleSheet,
 } from "react-native";
 import { getAIResponse } from "../api/openai";
-import AIProfile from "../components/AIProfile"; // AIProfile 컴포넌트 가져오기
+import AIProfile from "../components/AIProfile";
 
 const AICounselScreen = () => {
-  const [messages, setMessages] = useState([]); // 채팅 메시지 목록
-  const [userMessage, setUserMessage] = useState(""); // 사용자 입력 메시지
+  const [messages, setMessages] = useState([]);
+  const [userMessage, setUserMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+
+  // 초기 메시지 1초 후 표시
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const initialMessage = {
+        id: "init",
+        text: "안녕하세요! 무엇을 도와드릴까요?",
+        sender: "ai",
+      };
+      setMessages([initialMessage]);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSendMessage = async () => {
     if (userMessage.trim() === "") return;
@@ -23,8 +39,13 @@ const AICounselScreen = () => {
     setMessages((prevMessages) => [...prevMessages, userMsg]);
     setUserMessage("");
 
+    // 로딩 상태 시작
+    setIsLoading(true);
+
     try {
       const aiResponseText = await getAIResponse(userMessage);
+
+      // AI 응답 추가
       const aiResponse = {
         id: (Date.now() + 1).toString(),
         text: aiResponseText,
@@ -39,14 +60,17 @@ const AICounselScreen = () => {
         sender: "ai",
       };
       setMessages((prevMessages) => [...prevMessages, errorResponse]);
+    } finally {
+      // 로딩 상태 종료
+      setIsLoading(false);
     }
   };
 
   const renderMessage = ({ item }) => (
     <View
       style={[
-        styles.messageContainer,
-        item.sender === "user" ? styles.userMessage : styles.aiMessage,
+        styles.messageBubble,
+        item.sender === "user" ? styles.userBubble : styles.aiBubble,
       ]}
     >
       <Text style={styles.messageText}>{item.text}</Text>
@@ -62,19 +86,30 @@ const AICounselScreen = () => {
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={renderMessage}
-        contentContainerStyle={styles.messagesList}
-        ListHeaderComponent={<AIProfile />} // AIProfile을 리스트 헤더로 추가
+        contentContainerStyle={styles.chatContainer}
+        ListHeaderComponent={<AIProfile />}
       />
 
+      {/* 로딩 상태 표시 */}
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="#4CAF50" />
+          <Text style={styles.loadingText}>AI가 응답 중입니다...</Text>
+        </View>
+      )}
+
+      {/* 입력 및 버튼 */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="질문을 입력하세요..."
-          placeholderTextColor="#ccc"
+          placeholder="AI에게 상담하기..."
+          placeholderTextColor="#aaa"
           value={userMessage}
           onChangeText={setUserMessage}
         />
-        <Button title="보내기" onPress={handleSendMessage} />
+        <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
+          <Text style={styles.sendButtonText}>보내기</Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
@@ -83,45 +118,67 @@ const AICounselScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111111",
+    backgroundColor: "#111",
   },
-  messagesList: {
-    padding: 16,
+  chatContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
   },
-  messageContainer: {
+  messageBubble: {
+    maxWidth: "75%",
+    padding: 12,
     marginVertical: 8,
-    padding: 10,
-    borderRadius: 10,
+    borderRadius: 16,
   },
-  userMessage: {
+  userBubble: {
     alignSelf: "flex-end",
-    backgroundColor: "#007AFF",
+    backgroundColor: "#4CAF50",
   },
-  aiMessage: {
+  aiBubble: {
     alignSelf: "flex-start",
-    backgroundColor: "#333333",
+    backgroundColor: "#333",
   },
   messageText: {
-    color: "#ffffff",
+    color: "#fff",
     fontSize: 16,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    padding: 10,
     borderTopWidth: 1,
-    borderTopColor: "#333333",
+    borderTopColor: "#222",
+    backgroundColor: "#111",
   },
   input: {
     flex: 1,
     height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingHorizontal: 8,
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    backgroundColor: "#222",
     color: "#fff",
-    marginRight: 8,
+  },
+  sendButton: {
+    marginLeft: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#4CAF50",
+    borderRadius: 20,
+  },
+  sendButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  loadingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 10,
+  },
+  loadingText: {
+    color: "#aaa",
+    fontSize: 14,
+    marginLeft: 8,
   },
 });
 
