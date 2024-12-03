@@ -28,7 +28,8 @@
     "react-native-swiper": "^1.6.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@react-native-community/cli": "^15.1.2"
   },
   "private": true
 }
