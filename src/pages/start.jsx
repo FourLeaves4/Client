@@ -1,68 +1,90 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import Swiper from 'react-native-swiper';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, Animated, Dimensions } from 'react-native';
+import QuestionCard from '../components/StartPage/QuestionCard';
+import PaginationDots from '../components/StartPage/PaginationDots';
+import Button from '../components/StartPage/Button';
+
+const { width } = Dimensions.get('window'); // 화면 너비
 
 export default function Start({ navigation }) {
-  const [slideTime, setSlideTime] = useState(1);
-  const bannerLists = [
+  // 이미지 슬라이드 데이터
+  const images = [
+    {
+      id: 0,
+      src: require('../../assets/ExamplePhoto_01.png'),
+      title: 'Example Question_1',
+      subtitle: '전공 질문 어쩌구 저쩌구 질문 저쩌구 질문 질문 질문띠',
+    },
     {
       id: 1,
-      imageUrl:
-        'https://lh3.googleusercontent.com/proxy/J4Ly4jjnTzGj24-vIxym4l729OwQd0jDR66DP4Jh_Qquju70-B5N24Zebl9_TuVuTy9ZJYKkM0Tvtow7Q7jexSuEcJFGFmf8vcYxxvumMov4jhGAkVFJfpDv6NdP',
+      src: require('../../assets/ExamplePhoto_02.png'),
+      title: 'Example Question_2',
+      subtitle: '전공 질문 저쩌구 어쩌구 질문 저쩌구 질문 질문 질문띠',
     },
     {
       id: 2,
-      imageUrl:
-        'https://lh4.googleusercontent.com/proxy/MRQA2mpjd3yXno8jwIElGXi6M_APLXckv9qseshcMQskP1HBPF3aMykClZgrFG2QL788Nn7dnYmWAYaLZ1wskNVuTsTssSpOLqReRYDWU-a187LbFugwAMgwUKvu',
-    },
-    {
-      id: 3,
-      imageUrl:
-        'https://lh3.googleusercontent.com/proxy/PVBaqkQu38nQN4hfkMWGaimbqQtNlfITnSe6FHTFb96ixQT7a_F0-PnAdA4L0eHSmYlu_YiunJxCC8DEy12HgjvVPkrEt5J15uhh1EcURWaSfy_MY0BY0p6Ie-Pf',
+      src: require('../../assets/ExamplePhoto_03.png'),
+      title: 'Example Question_3',
+      subtitle: '어쩌구 전공 질문 저쩌구 저쩌구 질문 질문 질문띠',
     },
   ];
 
+  const [activeIndex, setActiveIndex] = useState(0); // 현재 활성화된 이미지 인덱스
+  const translateX = useRef(new Animated.Value(0)).current; // 애니메이션 값
+
+  // 1초마다 이미지 변경
   useEffect(() => {
-    const autoTimer = setTimeout(() => setSlideTime(4), 1000);
-    return () => clearTimeout(autoTimer); // cleanup
-  }, []);
+    const interval = setInterval(() => {
+      Animated.timing(translateX, {
+        toValue: -(activeIndex + 1) * width, // 다음 이미지로 슬라이드
+        duration: 800, // 부드러운 전환 시간
+        useNativeDriver: true,
+      }).start(() => {
+        // 인덱스 업데이트
+        const nextIndex = (activeIndex + 1) % images.length;
+        setActiveIndex(nextIndex);
+        translateX.setValue(-nextIndex * width); // 애니메이션 초기화
+      });
+    }, 3000); // 이미지 변경 주기 (3초)
+
+    return () => clearInterval(interval); // 컴포넌트 언마운트 시 타이머 정리
+  }, [activeIndex, translateX]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>NOVA</Text>
-      <Swiper
-        autoplay
-        showsPagination={false}
-        width={300}
-        height={300}
-        autoplayTimeout={slideTime}
-      >
-        {bannerLists.map((banner) => {
-          return (
-            <View key={banner.id} style={styles.slide}>
-              <Image
-                source={{ uri: banner.imageUrl }}
-                style={styles.image}
-                resizeMode="cover"
+      {/* 슬라이더 컨테이너 */}
+      <View style={styles.slider}>
+        <Animated.View
+          style={{
+            flexDirection: 'row',
+            transform: [{ translateX }], // 애니메이션 적용
+          }}
+        >
+          {images.map((image) => (
+            <View key={image.id} style={{ width }}>
+              <QuestionCard
+                image={image.src} // 이미지 전달
+                title={image.title} // 각 이미지의 제목
+                subtitle={image.subtitle} // 각 이미지의 설명
               />
             </View>
-          );
-        })}
-      </Swiper>
+          ))}
+        </Animated.View>
+      </View>
 
-      <View style={styles.button}>
-        <TouchableOpacity
-          style={styles.button_start}
-          onPress={() => navigation.navigate('Questions')}
-        >
-          <Text style={styles.buttonText}>시작하기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button_login}
-          onPress={() => navigation.navigate('Login')}
-        >
-          <Text style={styles.buttonText}>로그인하기</Text>
-        </TouchableOpacity>
+      {/* PaginationDots 컴포넌트 */}
+      <PaginationDots totalDots={images.length} activeDot={activeIndex} />
+
+      {/* 버튼 컨테이너 */}
+      <View style={styles.buttonWrapper}>
+        <Button
+          type="googleLogin"
+          onPress={() => console.log('Google Login Pressed')}
+        />
+        <Button
+          type="start"
+          onPress={() => navigation.navigate('Character')} // Character 페이지로 이동
+        />
       </View>
     </View>
   );
@@ -71,50 +93,18 @@ export default function Start({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#000000',
-  },
-  title: {
-    paddingTop: 100,
-    flex: 0.5,
-    color: '#FBF15B',
-    fontSize: 100,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  image: {
-    width: '100%',
-    height: 250,
-    borderRadius: 10,
-  },
-  slide: {
-    flex: 1,
+    backgroundColor: '#111111',
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  button: {
-    flex: 0.5,
-    justifyContent: 'flex-end',
-    paddingBottom: 80,
+  slider: {
+    width: width, // 슬라이더 너비 설정
+    height: 300, // 슬라이더 높이 설정
+    overflow: 'hidden', // 영역 밖 이미지 숨김
   },
-  button_start: {
-    backgroundColor: '#FBF15B',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    marginBottom: 10,
-    width: 345,
-  },
-  button_login: {
-    backgroundColor: '#ffffff',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    width: 345,
-  },
-  buttonText: {
-    color: '#000000',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  buttonWrapper: {
+    marginTop: 120, // PaginationDots 아래 간격
+    alignItems: 'center',
+    gap: 16, // 버튼 간 간격
   },
 });
