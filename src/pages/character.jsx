@@ -1,10 +1,20 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import Header from '../components/Character/Header';
+import CharacterDisplay from '../components/Character/CharacterDisplay';
+import Description from '../components/Character/Description';
+import CharacterButton from '../components/Character/CharacterButton';
 
-export default function App() {
+export default function Character({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Character Page</Text>
+      <Header title="제 모습을 선택해 주세요." subtitle="어떨 것 같아요?" />
+      <CharacterDisplay/>
+      <Description />
+
+      <CharacterButton
+        navigation={navigation}// 'HomeScreen'으로 이동
+      />
     </View>
   );
 }
@@ -12,13 +22,12 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#111111',
     alignItems: 'center',
-    backgroundColor: '#000', // 배경색 검정
+    padding: 16,
   },
-  text: {
-    fontSize: 24,
-    color: '#fbf15b', // 글자색 노란색
-    fontWeight: 'bold',
+  buttonWrapper: {
+    marginTop: 30,
+    alignItems: 'center',
   },
 });
