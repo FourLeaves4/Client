@@ -23,7 +23,7 @@ export default function CharacterDisplay({ character, isRecommended, isSelected 
     <View style={[styles.container]}>
       {isRecommended && (
         <View style={styles.badgeContainer}>
-          <Text style={styles.badgeText}>AI</Text>
+          <Text style={styles.badgeText}>Rec</Text>
         </View>
       )}
       <Animated.Image
