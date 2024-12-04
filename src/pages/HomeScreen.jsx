@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
+import ProfileCard from '../components/ProfileCard';
 
 function HomeScreen({ route }) {
   const { character } = route.params || {};
@@ -16,6 +17,7 @@ function HomeScreen({ route }) {
     <View style={styles.container}>
       <View style={styles.imageWrapper}>
         <View style={styles.ellipse} />
+        <ProfileCard/>
         <Image source={character.homeImage} style={styles.image} />
       </View>
     </View>
