@@ -17,8 +17,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end', // 텍스트를 아래로 정렬
     height: 120, // Header 높이 축소
-    marginBottom: 30, // 아래 여백 추가
-    backgroundColor: 'transparent', // 배경색 제거
+    marginBottom: 20, // 아래 여백 추가
   },
   title: {
     fontFamily: 'Jaro-Regular',
@@ -33,6 +32,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     lineHeight: 28,
-    marginTop: 4, // 제목과 부제목 사이의 간격
+    marginTop: 6, // 제목과 부제목 사이의 간격
   },
 });
