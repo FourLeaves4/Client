@@ -13,9 +13,10 @@ export default function Header({ title, subtitle }) {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
-    height: 240, // 컴포넌트 전체 높이
-    marginBottom: 20, // 하단 여백
+    justifyContent: 'flex-end', // 텍스트를 아래로 정렬
+    height: 120, // Header 높이 축소
+    marginBottom: 30, // 아래 여백 추가
+    backgroundColor: 'transparent', // 배경색 제거
   },
   title: {
     fontFamily: 'Jaro-Regular',
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#FFFFFF',
     textAlign: 'center',
-    lineHeight: 32,
-    marginTop: 8, // 제목과 부제목 사이의 간격
+    lineHeight: 28,
+    marginTop: 4, // 제목과 부제목 사이의 간격
   },
 });
