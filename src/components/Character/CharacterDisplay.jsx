@@ -1,7 +1,24 @@
-import React from 'react';
-import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Animated, Text, StyleSheet, Dimensions } from 'react-native';
 
-export default function CharacterDisplay({ character, isRecommended }) {
+export default function CharacterDisplay({ character, isRecommended, isSelected }) {
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [isSelected]);
+
   return (
     <View style={[styles.container]}>
       {isRecommended && (
@@ -9,7 +26,10 @@ export default function CharacterDisplay({ character, isRecommended }) {
           <Text style={styles.badgeText}>AI</Text>
         </View>
       )}
-      <Image source={character.image} style={styles.image} />
+      <Animated.Image
+        source={isSelected ? character.selectedImage : character.image}
+        style={[styles.image, { opacity: fadeAnim }]}
+      />
       <Text style={styles.name}>{character.name}</Text>
     </View>
   );
@@ -19,9 +39,9 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: Dimensions.get('window').width, // 화면 너비
-    height: Dimensions.get('window').height * 0.7, // 화면 높이의 70% 차지
-    backgroundColor: '#111111', // 배경색
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height * 0.7,
+    backgroundColor: '#111111',
     marginTop: 130,
   },
   badgeContainer: {
@@ -29,23 +49,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 4,
     borderRadius: 12,
-    marginBottom: 20, // 뱃지와 제목 사이 간격 설정
+    marginBottom: 20,
     alignSelf: 'center',
   },
-  
   badgeText: {
-    color: '#FFFFFF', // 텍스트 색상 (흰색)
-    fontSize: 14, // 텍스트 크기
-    fontWeight: 'bold', // 굵은 텍스트
-    textAlign: 'center', // 텍스트 중앙 정렬
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   image: {
-    width: '90%', // 부모 컨테이너의 90% 차지
-    height: '90%', // 부모 컨테이너의 90% 차지
-    resizeMode: 'contain', // 이미지 비율 유지
+    width: '90%',
+    height: '90%',
+    resizeMode: 'contain',
   },
   name: {
-    fontSize: 28, // 글자 크기를 더 키움
+    fontSize: 28,
     color: '#FFFFFF',
     marginTop: 10,
   },

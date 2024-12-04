@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, FlatList, Dimensions, TouchableOpacity, Animated } from 'react-native';
 import Header from '../components/Character/Header';
 import CharacterDisplay from '../components/Character/CharacterDisplay';
 import Description from '../components/Character/Description';
@@ -9,33 +9,41 @@ import PaginationDots from '../components/Character/PaginationDots';
 const { width } = Dimensions.get('window');
 
 export default function Character({ route, navigation }) {
-  const { recommendedMajor } = route.params; // 설문 결과로 전달된 추천 캐릭터
-  const [currentIndex, setCurrentIndex] = useState(0); // 현재 인덱스 추적
+  const { recommendedMajor } = route.params;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedCharacter, setSelectedCharacter] = useState(null); // 초기 상태는 null
+  const flatListRef = useRef(null);
+  const fadeAnim = useRef(new Animated.Value(1)).current; // Animated 값 초기화
   const [characters, setCharacters] = useState([
     {
       id: 1,
       name: 'FrontEnd',
       image: require('../../assets/FrontEndCharacter.png'),
+      selectedImage: require('../../assets/FrontEndCharacterSelected.png'),
     },
     {
       id: 2,
       name: 'BackEnd',
       image: require('../../assets/BackEndCharacter.png'),
+      selectedImage: require('../../assets/BackEndCharacterSelected.png'),
     },
     {
       id: 3,
       name: 'iOS',
       image: require('../../assets/IOSCharacter.png'),
+      selectedImage: require('../../assets/IOSCharacterSelected.png'),
     },
     {
       id: 4,
       name: 'Android',
       image: require('../../assets/AndroidCharacter.png'),
+      selectedImage: require('../../assets/AndroidCharacterSelected.png'),
     },
     {
       id: 5,
       name: 'Nova',
       image: require('../../assets/NovaCharacter.png'),
+      selectedImage: require('../../assets/NovaCharacterSelected.png'),
     },
   ]);
 
@@ -45,9 +53,6 @@ export default function Character({ route, navigation }) {
       (character) => character.name === recommendedMajor
     );
 
-
-  console.log('추천 캐릭터:', recommendedCharacter); // 추천 캐릭터 확인
-
     if (recommendedCharacter) {
       setCharacters((prev) => [
         recommendedCharacter,
@@ -56,20 +61,64 @@ export default function Character({ route, navigation }) {
     }
   }, [recommendedMajor]);
 
+  const handleCharacterSelect = (character, index) => {
+    // 페이드 아웃 애니메이션
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setSelectedCharacter(character); // 캐릭터 선택
+      // 페이드 인 애니메이션
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    });
+
+    // FlatList 자동 스크롤
+    flatListRef.current.scrollToIndex({
+      animated: true,
+      index,
+    });
+  };
+
   return (
     <View style={styles.container}>
-      <Header title="제 모습을 선택해 주세요." subtitle="어떨 것 같아요?" />
+      {/* Header 업데이트 */}
+      <Header
+        title={
+          selectedCharacter
+            ? '이 캐릭터로 하실건가요?'
+            : '제 모습을 선택해 주세요.'
+        }
+        subtitle={selectedCharacter ? selectedCharacter.name : '어떨 것 같아요?'}
+        fadeAnim={fadeAnim} // 애니메이션 값 전달
+      />
 
       {/* 캐릭터 슬라이드 */}
       <FlatList
+        ref={flatListRef} // FlatList 참조 설정
         horizontal
         pagingEnabled
         data={characters}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item, index }) => (
-          <View style={styles.slide}>
-            <CharacterDisplay character={item} isRecommended={index === 0} />
-          </View>
+          <TouchableOpacity
+            style={[styles.slide]}
+            onPress={() => handleCharacterSelect(item, index)}
+          >
+            <CharacterDisplay
+              character={
+                selectedCharacter?.id === item.id
+                  ? { ...item, image: item.selectedImage }
+                  : item
+              }
+              isRecommended={item.name === recommendedMajor}
+              isSelected={selectedCharacter?.id === item.id}
+            />
+          </TouchableOpacity>
         )}
         showsHorizontalScrollIndicator={false}
         onScroll={(event) => {
@@ -100,7 +149,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   flatList: {
-    flexGrow: 0, // FlatList 높이 조정
+    flexGrow: 0,
     width: width,
     alignSelf: 'center',
   },
@@ -109,8 +158,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   slide: {
-    width, // 각 슬라이드의 너비를 화면 너비로 설정
+    width,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 16,
   },
 });

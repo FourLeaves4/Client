@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Animated, Text, StyleSheet } from 'react-native';
 
-export default function Header({ title, subtitle }) {
+export default function Header({ title, subtitle, fadeAnim }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
+      <Animated.Text style={[styles.subtitle, { opacity: fadeAnim }]}>
+        {subtitle}
+      </Animated.Text>
     </View>
   );
 }
