@@ -136,7 +136,7 @@ export default function Character({ route, navigation }) {
 
       <Description />
 
-      <CharacterButton navigation={navigation} />
+      <CharacterButton navigation={navigation} selectedCharacter={selectedCharacter} />
     </View>
   );
 }

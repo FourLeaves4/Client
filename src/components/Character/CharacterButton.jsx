@@ -1,11 +1,25 @@
 import React from 'react';
-import { TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, Image, StyleSheet, Alert } from 'react-native';
 
-export default function CharacterButton({ navigation }) {
+export default function CharacterButton({ navigation, selectedCharacter }) {
+  const handleGoogleStart = () => {
+    if (!selectedCharacter) {
+      Alert.alert(
+        "캐릭터를 선택해주세요",
+        "Google로 시작하기 전에 캐릭터를 선택해주세요.",
+        [{ text: "확인" }]
+      );
+      return;
+    }
+
+    // 캐릭터가 선택되었을 경우에만 이동
+    navigation.navigate('Main', { screen: 'Home' });
+  };
+
   return (
     <TouchableOpacity
       style={styles.button}
-      onPress={() => navigation.navigate('Main', { screen: 'Home' })}
+      onPress={handleGoogleStart}
     >
       <Image
         source={require('../../../assets/Google_Image.png')} // Google 아이콘 이미지 경로
