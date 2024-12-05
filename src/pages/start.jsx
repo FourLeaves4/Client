@@ -83,7 +83,7 @@ export default function Start({ navigation }) {
         />
         <Button
           type="start"
-          onPress={() => navigation.navigate('Character')} // Character 페이지로 이동
+          onPress={() => navigation.navigate('Questions')} // Character 페이지로 이동
         />
       </View>
     </View>

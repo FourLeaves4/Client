@@ -1,19 +1,24 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 
-function ProfileCard() {
+export default function ProfileCard() {
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        {/* 원형 프로필 */}
-        <View style={styles.circle} />
-        <View style={styles.textContainer}>
-          <Text style={styles.levelText}>Lev.18 하지니</Text>
-          <View style={styles.roleContainer}>
-            <View style={styles.dot} />
-            <Text style={styles.roleText}>주니어 개발자</Text>
-          </View>
-        </View>
+      <View style={styles.overlap}>
+        <Text style={styles.textWrapper}>다귀찮을 띄</Text>
+        <Text style={styles.subText} numberOfLines={1} ellipsizeMode="tail">
+          Your Step is Junior Developer!
+        </Text>
+      </View>
+      <View style={styles.overlapGroup}>
+        <Image
+          source={require('../../assets/프로필.png')} // 메인 이미지 경로
+          style={styles.image}
+        />
+        <Image
+          source={require('../../assets/badge.png')} // 서브 이미지 경로
+          style={styles.element}
+        />
       </View>
     </View>
   );
@@ -21,73 +26,65 @@ function ProfileCard() {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 54,
-    left: 20,
-    width: 267,
-    height: 100,
-    backgroundColor: '#000',
-    paddingVertical: 20,
-  },
-  card: {
-    width: 267,
-    height: 80,
-    backgroundColor: '#333',
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 16,
     position: 'relative',
-    shadowColor: '#E3E3E3',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    elevation: 5,
+    width: 234,
+    height: 73,
+    marginRight: 110,
+    marginTop: 40,
   },
-  circle: {
+  overlap: {
     position: 'absolute',
-    width: 49,
-    height: 49,
-    borderRadius: 24.5,
-    backgroundColor: "white",
+    width: 159, // 기존 너비 유지
+    height: 48,
     top: 12,
-    left: 16,
+    left: 75,
   },
-  textContainer: {
+  textWrapper: {
     position: 'absolute',
-    top: 13,
-    left: 85,
-    width: 150,
-    height: 42,
-    justifyContent: 'center',
+    width: 101,
+    top: 0,
+    left: 0,
+    fontFamily: 'Pretendard-SemiBold',
+    fontWeight: '600',
+    color: '#ffffff',
+    fontSize: 16,
+    textAlign: 'center',
+    lineHeight: 20,
   },
-  levelText: {
-    fontSize: 18,
-    color: '#e2e2e2',
+  subText: {
+    position: 'absolute',
+    top: 26, // 살짝 조정
+    left: 12,
+    fontFamily: 'Jaro-Regular',
     fontWeight: '400',
-    fontFamily: 'Pretendard-Regular',
-    marginBottom: 2,
-    marginTop: 4,
+    color: '#acacac',
+    fontSize: 12.5, // 폰트 크기 살짝 줄임
+    textAlign: 'center',
+    lineHeight: 14,
+    width: '100%', // 부모 컨테이너 너비에 맞춤
+    whiteSpace: 'nowrap', // 줄바꿈 방지
   },
-  roleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-    left: 2,
+  overlapGroup: {
+    position: 'absolute',
+    width: 70,
+    height: 73,
+    top: 0,
+    left: 0,
   },
-  dot: {
-    width: 8,
-    height: 8,
-    backgroundColor: '#5be5fb',
-    borderRadius: 4,
-    marginRight: 8,
+  image: {
+    position: 'absolute',
+    width: 65,
+    height: 65,
+    top: 0,
+    left: 5,
+    resizeMode: 'cover',
   },
-  roleText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#5be5fb',
-    fontFamily: 'Pretendard-Bold',
+  element: {
+    position: 'absolute',
+    width: 34,
+    height: 34,
+    top: 39,
+    left: 0,
+    resizeMode: 'cover',
   },
 });
-
-export default ProfileCard;
