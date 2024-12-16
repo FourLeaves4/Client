@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StatusBar, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Start from './src/pages/start';
@@ -10,55 +10,98 @@ import MyScreen from './src/pages/MyScreen';
 import DeveloperStageScreen from './src/pages/DeveloperStageScreen';
 
 const Stack = createStackNavigator();
-// 스택 네비게이터를 생성하며, 앱에서 사용할 화면들을 쌓는 방식으로 관리
-// 화면 간 이동 시 이전 화면이 스택에 유지되어 뒤로가기 버튼을 통해 다시 돌아갈 수 있다.
 
 const MyDarkTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: '#000', // 기본 배경을 검정색으로 설정함
+    background: '#000', // 기본 배경을 검정색으로 설정
   },
+};
+
+// 로딩 화면 컴포넌트
+const SplashScreen = ({ navigation }) => {
+  useEffect(() => {
+    // 2초 후 Start 화면으로 이동
+    const timer = setTimeout(() => {
+      navigation.replace('Start'); // replace를 사용하여 로딩 화면 스택 제거
+    }, 2000);
+
+    return () => clearTimeout(timer); // 타이머 정리
+  }, [navigation]);
+
+  return (
+    <View style={styles.splashContainer}>
+      <Text style={styles.logoText}>Your App Logo</Text>
+      {/* 로고 이미지 사용 시 */}
+      {/* <Image source={require('./assets/logo.png')} style={styles.logoImage} /> */}
+    </View>
+  );
 };
 
 export default function App() {
   return (
     <NavigationContainer theme={MyDarkTheme}>
       <Stack.Navigator>
+        {/* 로딩 화면 */}
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={{ headerShown: false }} // 헤더 숨김
+        />
+        {/* Start 화면 */}
         <Stack.Screen
           name="Start"
-          options={{ headerShown: false }}
           component={Start}
+          options={{ headerShown: false }}
         />
+        {/* 나머지 화면 */}
         <Stack.Screen
           name="Questions"
-          options={{ headerShown: false }}
           component={Questions}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Character"
-          options={{ headerShown: false }}
           component={Character}
+          options={{ headerShown: false }}
         />
-
         <Stack.Screen
           name="Main"
-          options={{ headerShown: false }}
           component={BottomTabNavigator}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="MyScreen"
           component={MyScreen}
-          options={{ headerShown: false }} // 헤더 숨김
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="DeveloperStageScreen"
           component={DeveloperStageScreen}
-          options={{ headerShown: false }} // 헤더 숨김
+          options={{ headerShown: false }}
         />
-        
       </Stack.Navigator>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  splashContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000', // 로딩 화면 배경색
+  },
+  logoText: {
+    fontSize: 28,
+    color: '#fff', // 로고 텍스트 색상
+    fontWeight: 'bold',
+  },
+  logoImage: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+  },
+});
