@@ -1,5 +1,7 @@
+// CharacterButton.jsx
 import React from 'react';
-import { TouchableOpacity, Text, Image, StyleSheet, Alert } from 'react-native';
+import { Alert } from 'react-native';
+import CommonGoogleButton from '../CommonGoogleButton';
 
 export default function CharacterButton({ navigation, selectedCharacter }) {
   const handlePress = () => {
@@ -24,37 +26,5 @@ export default function CharacterButton({ navigation, selectedCharacter }) {
     });
   };
 
-  return (
-    <TouchableOpacity style={styles.button} onPress={handlePress}>
-      <Image
-        source={require('../../../assets/Google_Image.png')}
-        style={styles.icon}
-      />
-      <Text style={styles.text}>Google로 시작하기</Text>
-    </TouchableOpacity>
-  );
+  return <CommonGoogleButton onPress={handlePress} text="Google로 시작하기" />;
 }
-
-const styles = StyleSheet.create({
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    width: 345,
-    marginBottom: 30,
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    marginRight: 10,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-});
