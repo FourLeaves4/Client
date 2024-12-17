@@ -15,9 +15,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     borderRadius: 12,
     width: 345,
+    marginTop: -14,
     backgroundColor: '#FBF15B',
 
   },

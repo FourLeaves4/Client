@@ -2,6 +2,7 @@
   "expo": {
     "name": "four",
     "slug": "four",
+    "scheme": "yourapp",
     "version": "1.0.0",
     "extra": {
     },
