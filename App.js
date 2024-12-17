@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, Image } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Start from './src/pages/start';
@@ -32,9 +32,8 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <View style={styles.splashContainer}>
-      <Text style={styles.logoText}>Your App Logo</Text>
       {/* 로고 이미지 사용 시 */}
-      {/* <Image source={require('./assets/logo.png')} style={styles.logoImage} /> */}
+      <Image source={require('./assets/logo.png')} style={styles.logoImage} />
     </View>
   );
 };
@@ -100,8 +99,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   logoImage: {
-    width: 150,
-    height: 150,
+    width: 210,
+    //height: 150,
     marginBottom: 20,
   },
 });
