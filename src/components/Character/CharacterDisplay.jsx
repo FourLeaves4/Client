@@ -1,14 +1,36 @@
-import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Animated, Text, StyleSheet, Dimensions } from 'react-native';
 
-export default function CharacterDisplay() {
+export default function CharacterDisplay({ character, isRecommended, isSelected }) {
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [isSelected]);
+
   return (
-    <View style={styles.container}>
-      {/* 합쳐진 캐릭터와 텍스트 이미지 */}
-      <Image
-        source={require('../../../assets/CharacterWithFontEnd.png')} // 올바른 경로로 변경
-        style={styles.image}
+    <View style={[styles.container]}>
+      {isRecommended && (
+        <View style={styles.badgeContainer}>
+          <Text style={styles.badgeText}>Rec</Text>
+        </View>
+      )}
+      <Animated.Image
+        source={isSelected ? character.selectedImage : character.image}
+        style={[styles.image, { opacity: fadeAnim }]}
       />
+      <Text style={styles.name}>{character.name}</Text>
     </View>
   );
 }
@@ -17,13 +39,33 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1, // 필요하면 전체 화면 공간을 차지하도록 설정
-    backgroundColor: '#111111', // 디자인에 맞는 배경색
-    marginBottom: 30,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height * 0.7,
+    backgroundColor: '#111111',
+    marginTop: 130,
+  },
+  badgeContainer: {
+    backgroundColor: '#6f1010',
+    paddingHorizontal: 24,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginBottom: 10,
+    alignSelf: 'center',
+  },
+  badgeText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   image: {
-    width: 393, // 디자인에 맞는 너비로 조정
-    height: 546, // 디자인에 맞는 높이로 조정
-    resizeMode: 'contain', // 비율 유지
+    width: '90%',
+    height: '90%',
+    resizeMode: 'contain',
+  },
+  name: {
+    fontSize: 28,
+    color: '#FFFFFF',
+    marginTop: 10,
   },
 });
