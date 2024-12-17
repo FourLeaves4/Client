@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import ProfileSection from '../components/profileSection';
 import LevelBarSection from '../components/LevelBarSection';
 import LevelLabel from '../components/LevelLabel';
@@ -14,14 +14,13 @@ export default function MyScreen() {
       <View style={styles.topSection}>
         <ProfileSection />
         <LevelBarSection />
-        <LevelLabel/>
+        <LevelLabel />
         <DeveloperStep />
         <DeveloperStageButton />
         <CompletionLabel />
         <GrassBoard />
-
       </View>
-      
+
       {/* 다른 UI 요소들 추가 */}
       <View style={styles.otherContent}>
         {/* 다른 컴포넌트를 여기에 추가 */}
