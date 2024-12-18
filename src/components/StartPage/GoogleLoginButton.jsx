@@ -1,35 +1,55 @@
 import React from 'react';
-import { Alert } from 'react-native';
+import { Alert, Linking } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CommonGoogleButton from '../CommonGoogleButton';
 import { useNavigation } from '@react-navigation/native';
 
 export default function GoogleLoginButton() {
   const navigation = useNavigation();
 
-  // Google OAuth 시작
+  // 구글 로그인 URL
+  const GOOGLE_AUTH_URL =
+    'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app/login/oauth2/code/google';
+
+  // 토큰 저장 함수
+  const storeToken = async (token) => {
+    try {
+      await AsyncStorage.setItem('authToken', token);
+      console.log('토큰 저장 성공:', token);
+    } catch (error) {
+      console.error('토큰 저장 실패:', error);
+      Alert.alert('오류', '로그인 상태를 저장할 수 없습니다.');
+    }
+  };
+
+  // Google 로그인 버튼 핸들러
   const handleGoogleLogin = async () => {
     try {
-      // 백엔드에서 제공한 OAuth 요청 URL 호출
-      const authUrl = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app/login/oauth2/code/google';
+      // 외부 브라우저로 로그인 URL 열기
+      const supported = await Linking.canOpenURL(GOOGLE_AUTH_URL);
+      if (supported) {
+        await Linking.openURL(GOOGLE_AUTH_URL);
 
-      // 사용자가 로그인 페이지로 이동
-      const response = await fetch(authUrl, {
-        method: 'GET',
-        credentials: 'include', // 세션 쿠키 포함
-      });
+        // 백엔드 서버에서 반환된 토큰 받기
+        const response = await fetch(
+          'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app/validate-token',
+          { method: 'GET' }
+        );
 
-      if (response.ok) {
-        // 로그인 성공 처리 (예: 메인 화면 이동)
-        console.log('Google 로그인 성공');
-        navigation.replace('Main'); // 성공 시 메인 화면으로 이동
+        if (response.ok) {
+          const { token } = await response.json(); // 백엔드에서 반환된 토큰
+          await storeToken(token); // 토큰 저장
+          navigation.replace('Main'); // 로그인 성공 후 메인 화면 이동
+        } else {
+          console.error('토큰 검증 실패');
+          Alert.alert('로그인 실패', '토큰 검증에 실패했습니다.');
+        }
       } else {
-        // 실패 처리
-        console.error('Google 로그인 실패');
-        Alert.alert('로그인 실패', '다시 시도해주세요.');
+        Alert.alert('오류', 'Google 로그인 페이지를 열 수 없습니다.');
       }
     } catch (error) {
-      console.error('로그인 요청 오류:', error);
-      Alert.alert('로그인 실패', '서버와의 연결에 문제가 있습니다.');
+      console.error('Google 로그인 오류:', error);
+      Alert.alert('로그인 오류', '서버 연결에 실패했습니다.');
     }
   };
 

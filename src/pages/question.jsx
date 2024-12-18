@@ -6,9 +6,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 
-const url = '';
+// 베이스 URL + 엔드포인트
+const BASE_URL = 'https://your-backend-server.com'; // 실제 백엔드 베이스 URL
+const ENDPOINT = '/auth/major';
+
 const questions = [
   {
     id: 1,
@@ -40,109 +44,97 @@ const questions = [
 export default function Question({ navigation }) {
   const [selectedAnswers, setSelectedAnswers] = useState({});
 
-  function sendData() {
-    console.log('sendData 호출됨');
-  
-    // 설문 답변에서 추천 캐릭터를 결정
-    const recommendedMajor = getRecommendedMajor(selectedAnswers);
-  
-    // 설문 결과와 함께 Character 페이지로 이동
-    navigation.navigate('Character', { recommendedMajor });
-  }
-  
   function getRecommendedMajor(answers) {
     console.log('선택된 답변: ', answers);
-  
-    // iOS 조건 우선 확인
-    if (answers[3] === '애플이 만든 기기에서의 성능 최적화') {
-      return 'iOS';
-    }
-  
-    // Android 조건 확인
-    if (answers[3] === '안드로이드 기기와의 호환성') {
-      return 'Android';
-    }
-  
-    // BackEnd 조건 확인
-    if (answers[3] === '데이터 처리의 효율성과 보안') {
-      return 'BackEnd';
-    }
-  
-    // FrontEnd 조건 확인
-    if (answers[1] === '웹 개발' || answers[2] === '눈에 바로 보이는 결과물') {
+
+    if (answers[3] === '애플이 만든 기기에서의 성능 최적화') return 'iOS';
+    if (answers[3] === '안드로이드 기기와의 호환성') return 'Android';
+    if (answers[3] === '데이터 처리의 효율성과 보안') return 'BackEnd';
+    if (answers[1] === '웹 개발' || answers[2] === '눈에 바로 보이는 결과물')
       return 'FrontEnd';
-    }
-  
-    // 기본 추천 (Nova)
+
     return 'Nova';
   }
-  
-  
-  
+
+  async function sendData() {
+    console.log('sendData 호출됨');
+
+    const recommendedMajor = getRecommendedMajor(selectedAnswers);
+
+    const surveyData = {
+      answers: selectedAnswers,
+      recommendedMajor: recommendedMajor,
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      console.log('서버로 데이터 전송 중:', surveyData);
+
+      const response = await axios.post(`${BASE_URL}${ENDPOINT}`, surveyData);
+
+      console.log('서버 응답:', response.data);
+
+      // 서버로 데이터 전송 성공 시 Character 페이지로 이동
+      navigation.navigate('Character', { recommendedMajor });
+    } catch (error) {
+      console.error('데이터 전송 오류:', error);
+      Alert.alert('오류', '서버로 데이터를 전송할 수 없습니다.');
+    }
+  }
 
   function handleAnswer(questionId, answer) {
     setSelectedAnswers((prevAnswers) => {
-      if (prevAnswers[questionId] === answer) {
-        const { [questionId]: _, ...rest } = prevAnswers;
-        return rest; // 선택 취소
-      } else {
-        return { ...prevAnswers, [questionId]: answer }; // 새로운 답변 저장
-      }
+      return { ...prevAnswers, [questionId]: answer };
     });
   }
-  
-  // 상태가 업데이트된 후 로그 확인
+
   useEffect(() => {
     console.log('현재 선택된 답변:', selectedAnswers);
   }, [selectedAnswers]);
-  
-  
-  
-  // 모든 질문에 대해 답변이 선택되었는지 확인
+
   const isAllAnswered = questions.every((question) =>
     selectedAnswers.hasOwnProperty(question.id)
   );
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-  <Text style={styles.title}>간단한 설문조사를 시작할게요!</Text>
-  {questions.map((question) => (
-    <View key={question.id} style={styles.questionContainer}>
-      <Text style={styles.question}>{question.text}</Text>
-      {question.answers.map((answer, index) => {
-        const isSelected = selectedAnswers[question.id] === answer;
-        return (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.button_answer,
-              isSelected && styles.selectedAnswerButton,
-              isSelected && styles.selectedAnswerBorder, // 선택된 답변 테두리 색 변경
-            ]}
-            onPress={() => handleAnswer(question.id, answer)}
-          >
-            <Text
-              style={[
-                styles.answerText,
-                isSelected && styles.selectedAnswerText, // 선택된 답변 글씨 색 변경
-              ]}
-            >
-              {answer}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
-  ))}
-  <TouchableOpacity
-    onPress={sendData}
-    style={[styles.button_next, !isAllAnswered && styles.buttonDisabled]}
-    disabled={!isAllAnswered} // 답변이 모두 선택되지 않으면 버튼 비활성화
-  >
-    <Text style={styles.buttonText}>다음</Text>
-  </TouchableOpacity>
-</ScrollView>
-
+      <Text style={styles.title}>간단한 설문조사를 시작할게요!</Text>
+      {questions.map((question) => (
+        <View key={question.id} style={styles.questionContainer}>
+          <Text style={styles.question}>{question.text}</Text>
+          {question.answers.map((answer, index) => {
+            const isSelected = selectedAnswers[question.id] === answer;
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.button_answer,
+                  isSelected && styles.selectedAnswerButton,
+                  isSelected && styles.selectedAnswerBorder,
+                ]}
+                onPress={() => handleAnswer(question.id, answer)}
+              >
+                <Text
+                  style={[
+                    styles.answerText,
+                    isSelected && styles.selectedAnswerText,
+                  ]}
+                >
+                  {answer}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      ))}
+      <TouchableOpacity
+        onPress={sendData}
+        style={[styles.button_next, !isAllAnswered && styles.buttonDisabled]}
+        disabled={!isAllAnswered}
+      >
+        <Text style={styles.buttonText}>다음</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
@@ -178,10 +170,10 @@ const styles = StyleSheet.create({
     width: 345,
   },
   selectedAnswerButton: {
-    backgroundColor: 'rgba(255, 241, 91, 0.1)', // 배경색만 10% 투명도 적용 (rgba 형식으로 색상과 투명도 설정)
+    backgroundColor: 'rgba(255, 241, 91, 0.1)',
   },
   selectedAnswerBorder: {
-    borderColor: '#FBF15B', // 선택된 답변의 테두리 색
+    borderColor: '#FBF15B',
     borderWidth: 2,
   },
   answerText: {
@@ -190,7 +182,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   selectedAnswerText: {
-    color: '#FBF15B', // 선택된 답변의 글씨 색
+    color: '#FBF15B',
   },
   button_next: {
     marginTop: 52,
@@ -201,7 +193,7 @@ const styles = StyleSheet.create({
     width: 345,
   },
   buttonDisabled: {
-    backgroundColor: '#6D6C52', // 비활성화된 버튼 색
+    backgroundColor: '#6D6C52',
   },
   buttonText: {
     color: '#000000',
