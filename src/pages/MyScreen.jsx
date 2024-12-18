@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import ProfileSection from '../components/profileSection';
 import LevelBarSection from '../components/LevelBarSection';
 import LevelLabel from '../components/LevelLabel';
@@ -7,25 +7,30 @@ import DeveloperStep from '../components/DevelopStep';
 import DeveloperStageButton from '../components/DeveloperStageButton';
 import CompletionLabel from '../components/CompletionLabel';
 import GrassBoard from '../components/GrassBoard';
+import LogOut from '../components/LogOut';
+
 export default function MyScreen() {
   return (
-    <View style={styles.container}>
-      {/* 상단 섹션: ProfileSection + LevelBarSection */}
-      <View style={styles.topSection}>
-        <ProfileSection />
-        <LevelBarSection />
-        <LevelLabel />
-        <DeveloperStep />
-        <DeveloperStageButton />
-        <CompletionLabel />
-        <GrassBoard />
-      </View>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        {/* 상단 섹션: ProfileSection + LevelBarSection */}
+        <View style={styles.topSection}>
+          <ProfileSection />
+          <LevelBarSection />
+          <LevelLabel />
+          <DeveloperStep />
+          <DeveloperStageButton />
+          <CompletionLabel />
+          <GrassBoard />
+        </View>
 
-      {/* 다른 UI 요소들 추가 */}
-      <View style={styles.otherContent}>
-        {/* 다른 컴포넌트를 여기에 추가 */}
+        {/* 다른 UI 요소들 추가 */}
+        <View style={styles.otherContent}>
+          {/* 다른 컴포넌트를 여기에 추가 */}
+          <LogOut />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -49,5 +54,8 @@ const styles = StyleSheet.create({
   otherContent: {
     flex: 1,
     // 나머지 콘텐츠를 아래쪽에 위치
+  },
+  scrollContainer: {
+    paddingBottom: 40, // 스크롤 시 아래 여유 공간 추가
   },
 });
