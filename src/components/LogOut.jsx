@@ -19,8 +19,31 @@ const LogOutButton = () => {
       {
         text: '확인',
         onPress: () => {
-          // 로그아웃 처리 로직 (예: 로그아웃 API 호출)
           alert('로그아웃 되었습니다.');
+          // 로그아웃 API 호출
+          /* fetch('https://your-backend-url.com/api/logout', {
+            method: 'POST',
+            headers: {
+              Authorization: 'Bearer ' + YOUR_ACCESS_TOKEN, // 실제 토큰으로 교체
+            },
+          })
+            .then((response) => {
+              if (response.status === 204) {
+                // 로그아웃 성공 시 초기화 작업 및 화면 전환
+                alert('로그아웃 되었습니다.');
+                // 예시: 로그인 화면으로 이동 (React Navigation 사용)
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'LoginScreen' }],
+                });
+              } else {
+                alert('로그아웃에 실패했습니다. 다시 시도해주세요.');
+              }
+            })
+            .catch((error) => {
+              console.error('로그아웃 오류:', error);
+              alert('네트워크 오류가 발생했습니다.');
+            }); */
         },
       },
     ]);
