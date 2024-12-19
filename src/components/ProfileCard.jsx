@@ -1,9 +1,14 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProfileCard() {
+  const navigation = useNavigation(); // navigation 훅 초기화
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigation.navigate('MyScreen')}
+    >
       <View style={styles.overlap}>
         <Text style={styles.textWrapper}>다귀찮을 띄</Text>
         <Text style={styles.subText} numberOfLines={1} ellipsizeMode="tail">
@@ -20,7 +25,7 @@ export default function ProfileCard() {
           style={styles.element}
         />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
