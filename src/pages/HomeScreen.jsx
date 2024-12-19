@@ -3,18 +3,16 @@ import { View, Image, Text, StyleSheet, ScrollView, TouchableOpacity } from 'rea
 import ProfileCard from '../components/ProfileCard';
 
 function HomeScreen({ route }) {
-  const { character } = route.params || {};
+  const { character, missions, today, level, name } = route.params || {};
 
-  // 초기 미션 데이터 (5개로 확장)
-  const initialMissions = [
-    { id: 'A', text: '😄 전공 공부하기', completed: false },
-    { id: 'B', text: '📘 React 공부하기', completed: false },
-    { id: 'C', text: '💻 프로젝트 완성하기', completed: false },
-    { id: 'D', text: '📝 문서 작성하기', completed: false }, // 추가된 미션 1
-    { id: 'E', text: '🚀 새로운 기술 배우기', completed: false }, // 추가된 미션 2
-  ];
+  // 초기 미션 데이터 설정: 백엔드에서 전달받은 missions와 today를 기반으로 초기 상태 설정
+  const initialMissions = missions.map((mission, index) => ({
+    id: `mission-${index}`, // 고유 ID 생성
+    text: mission,
+    completed: today[index] === 1, // today 값이 1이면 완료된 상태로 설정
+  }));
 
-  const [missions, setMissions] = useState(initialMissions);
+  const [missionState, setMissionState] = useState(initialMissions);
 
   if (!character) {
     return (
@@ -26,7 +24,7 @@ function HomeScreen({ route }) {
 
   // 미션 완료 처리
   const completeMission = (missionId) => {
-    setMissions((prevMissions) => {
+    setMissionState((prevMissions) => {
       const updatedMissions = prevMissions.map((mission) =>
         mission.id === missionId ? { ...mission, completed: true } : mission
       );
@@ -46,12 +44,14 @@ function HomeScreen({ route }) {
       <View style={styles.imageWrapper}>
         <ProfileCard />
         <Image source={character.homeImage} style={styles.image} />
+        <Text style={styles.characterName}>{character.name}</Text>
+        <Text style={styles.level}>현재 레벨: {level}</Text>
       </View>
 
       {/* 하단 스크롤 가능한 미션 창 */}
       <View style={styles.missionContainer}>
         <Text style={styles.missionTitle}>미션 리포트</Text>
-        {missions.map((mission) => (
+        {missionState.map((mission) => (
           <View key={mission.id} style={styles.missionContent}>
             <Text style={styles.missionText}>{mission.text}</Text>
             <TouchableOpacity
@@ -93,6 +93,17 @@ const styles = StyleSheet.create({
     width: 200, // 이미지 가로 크기 설정
     height: 500, // 이미지 세로 크기 설정
     resizeMode: 'cover', // 비율 유지하며 크기 조정
+  },
+  characterName: {
+    fontSize: 24,
+    color: '#fff',
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  level: {
+    fontSize: 18,
+    color: '#FFD700',
+    marginBottom: 20,
   },
   missionContainer: {
     width: '98%',
