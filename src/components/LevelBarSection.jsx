@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 const LevelBarSection = () => {
-  //const missionData = [1, 1, 0, 0, 0];
-  const [missionData, setMissionData] = useState([]); // missionData 상태
+  const [missionData, setMissionData] = useState(null); // missionData 상태
   const [levelProgress, setLevelProgress] = useState(0);
 
   useEffect(() => {
@@ -11,8 +10,8 @@ const LevelBarSection = () => {
     fetch('https://your-backend-api.com/mission') // 실제 API URL로 변경
       .then((response) => response.json()) // 응답을 JSON으로 변환
       .then((data) => {
-        const missionData = data.today; // 백엔드에서 반환된 데이터에서 'today' 필드 가져오기
-        setMissionData(missionData); // 상태 업데이트
+        const num = data.num; // 백엔드에서 반환된 데이터에서 'num' 값 가져오기
+        setMissionData(num); // 상태 업데이트
       })
       .catch((error) => {
         console.error('Error fetching mission data:', error);
@@ -20,10 +19,9 @@ const LevelBarSection = () => {
   }, []); // 컴포넌트가 처음 렌더링될 때만 실행
 
   useEffect(() => {
-    if (missionData && missionData.length > 0) {
-      const completedMissions = missionData.filter((item) => item === 1).length; // 완료된 미션 개수
-      const totalMissions = missionData.length; // 총 미션 개수
-      const progress = completedMissions / totalMissions; // 레벨 진행 상태 계산
+    if (missionData !== null) {
+      const totalMissions = 5; // 총 미션 수
+      const progress = missionData / totalMissions; // 진행 상태 계산
       setLevelProgress(progress); // 레벨 진행 상태 업데이트
     }
   }, [missionData]); // missionData가 변경될 때마다 실행
