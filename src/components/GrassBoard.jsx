@@ -1,49 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 
-export default function GrassBoard() {
+// 화면 크기 동적 계산
+const screenWidth = Dimensions.get('window').width; // 기기 크기에 맞춘 동적 너비
+const screenHeight = Dimensions.get('window').height;
+
+// 색상 배열 (투명도)
+const colors = [
+  '#fbf15b1a',
+  '#fbf15b4c',
+  '#fbf15b80',
+  '#fbf15bb2',
+  '#fbf15be6',
+  '#fbf15b',
+];
+
+// 🌐 백엔드 API URL (user_id는 동적으로 설정)
+const API_URL = (userId) => `https://your-backend-url.com/${userId}/profile`;
+
+export default function GrassBoard({ userId }) {
   const [grassData, setGrassData] = useState([]); // 초기값을 빈 배열로 설정
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
+  // 📡 백엔드 API 호출
   useEffect(() => {
     const fetchGrassData = async () => {
-      // 백엔드 API에서 데이터를 받아오는 부분
-      // 여기는 예시로 데이터를 직접 설정함함
+      try {
+        /* // 백엔드 API에서 데이터를 받아오는 부분
+        const data = {
+          month: [
+            3, 5, 4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 2, 5, 4, 0, 3, 0, 0, 0,
+            0, 0, 5, 4, 3, 2, 1, 0,
+          ],
+        }; */
 
-      const data = {
-        today: [1, 1, 1, 0, 1], // 오늘 미션 완료 상태 (3개 완료)
-        month: Array(30).fill(0), // 한 달 기준 미션 데이터 (기본값은 0)
-      };
+        const response = await fetch(API_URL(userId)); // userId를 동적으로 URL에 포함
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json(); // JSON 데이터 파싱
 
-      // 오늘 미션 완료 수를 확인
-      const completedMissions = data.today.filter(
-        (mission) => mission === 1
-      ).length;
-
-      // `month` 데이터를 받아온 후, 업데이트된 값으로 상태 업데이트
-      const updatedMonthData = [...data.month];
-      updatedMonthData[0] = completedMissions; // 첫 번째 칸에 오늘 미션 완료 갯수 반영
-
-      setGrassData(updatedMonthData); // 상태 업데이트
+        if (data && data.month) {
+          setGrassData(data.month); // 상태에 'month' 데이터 저장
+        } else {
+          throw new Error('Invalid response: month data is missing');
+        }
+      } catch (error) {
+        console.error('Error fetching grass data:', error); // 에러 메시지 출력
+      } finally {
+        setLoading(false); // 로딩 상태 해제
+      }
     };
 
-    fetchGrassData(); // 데이터 수신
-  }, []); // 빈 배열이므로 컴포넌트가 처음 렌더링될 때만 실행
+    fetchGrassData(); // 데이터 요청
+  }, [userId]); // // userId가 변경되면 데이터 요청
+
+  // 🖌️ 투명도 색상을 스타일로 반환하는 함수
+  const getGrassStyle = useCallback(
+    (value) => ({ backgroundColor: colors[value] }),
+    []
+  );
+
+  // 📟 로딩 중일 때 로딩 인디케이터 표시
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#fbf15b" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.frame}>
       {grassData.map((value, index) => (
-        <View
-          key={index}
-          style={[
-            styles.commonGrass,
-            value === 0 && styles.emptyGrass, // 미션을 안 한 경우
-            value === 1 && styles.grass1, // 미션 1개 완료
-            value === 2 && styles.grass2, // 미션 2개 완료
-            value === 3 && styles.grass3, // 미션 3개 완료
-            value === 4 && styles.grass4, // 미션 4개 완료
-            value === 5 && styles.grass5, // 미션 5개 완료
-          ]}
-        />
+        <View key={index} style={[styles.commonGrass, getGrassStyle(value)]} />
       ))}
     </View>
   );
@@ -51,40 +81,28 @@ export default function GrassBoard() {
 
 const styles = StyleSheet.create({
   frame: {
-    display: 'flex',
     flexWrap: 'wrap',
     flexDirection: 'row',
-    width: 350,
-    height: 200,
+    width: screenWidth * 0.9, // 화면 너비에 맞춘 동적 크기
+    height: screenHeight * 0.23, // 화면 높이에 맞춘 비율 (23%)
     alignItems: 'center',
-    gap: 8, // React Native는 gap을 직접 지원하지 않으므로 margin을 사용해야 함
     padding: 18,
     backgroundColor: '#66666633',
     borderRadius: 24,
     overflow: 'hidden',
   },
+
   commonGrass: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    margin: 2, // gap을 대신하는 margin
+    width: screenWidth * 0.072, // 너비의 7%로 비율 적용
+    height: screenWidth * 0.072, // 정사각형으로 유지
+    borderRadius: (screenWidth * 0.072) / 2, // 반지름도 비율로 계산
+    margin: screenWidth * 0.014, // 비율 기반의 여백
   },
-  emptyGrass: {
-    backgroundColor: '#fbf15b1a', // 빈 잔디의 배경색
-  },
-  grass5: {
-    backgroundColor: '#fbf15b',
-  },
-  grass4: {
-    backgroundColor: '#fbf15be6',
-  },
-  grass3: {
-    backgroundColor: '#fbf15bb2',
-  },
-  grass1: {
-    backgroundColor: '#fbf15b4c',
-  },
-  grass2: {
-    backgroundColor: '#fbf15b80',
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#66666633',
   },
 });
