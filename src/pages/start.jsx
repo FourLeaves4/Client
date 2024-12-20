@@ -11,19 +11,19 @@ export default function Start({ navigation }) {
   const images = [
     {
       id: 0,
-      src: require('../../assets/ExamplePhoto_01.png'),
+      src: require('../../assets/1st.png'),
       title: 'Example Question_1',
       subtitle: '전공 질문 어쩌구 저쩌구 질문 저쩌구 질문 질문 질문띠',
     },
     {
       id: 1,
-      src: require('../../assets/ExamplePhoto_02.png'),
+      src: require('../../assets/2nd.png'),
       title: 'Example Question_2',
       subtitle: '전공 질문 저쩌구 어쩌구 질문 저쩌구 질문 질문 질문띠',
     },
     {
       id: 2,
-      src: require('../../assets/ExamplePhoto_03.png'),
+      src: require('../../assets/3rd.png'),
       title: 'Example Question_3',
       subtitle: '어쩌구 전공 질문 저쩌구 저쩌구 질문 질문 질문띠',
     },
@@ -92,19 +92,20 @@ export default function Start({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 142,
     flex: 1,
     backgroundColor: '#111111',
-    justifyContent: 'center',
     alignItems: 'center',
   },
   slider: {
     width: width, // 슬라이더 너비 설정
     height: 300, // 슬라이더 높이 설정
+    justifyContent: 'center',
     overflow: 'hidden', // 영역 밖 이미지 숨김
   },
   buttonWrapper: {
-    marginTop: 120, // PaginationDots 아래 간격
+    marginTop: 115, // PaginationDots 아래 간격
     alignItems: 'center',
-    gap: 16, // 버튼 간 간격
+    gap: 14, // 버튼 간 간격
   },
 });

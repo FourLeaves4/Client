@@ -19,11 +19,11 @@ export default function CharacterButton({ navigation, selectedCharacter }) {
 
     // 홈 이미지 매핑
     const homeImages = {
-      FrontEnd: require('../../../assets/HomeFrontEndCharacter.png'),
-      BackEnd: require('../../../assets/HomeBackEndCharacter.png'),
-      iOS: require('../../../assets/HomeIOSCharacter.png'),
-      Android: require('../../../assets/HomeAndroidCharacter.png'),
-      Nova: require('../../../assets/HomeNovaCharacter.png'),
+      FrontEnd: require('../../../assets/Fe.png'),
+      BackEnd: require('../../../assets/Be.png'),
+      iOS: require('../../../assets/io.png'),
+      Android: require('../../../assets/Ad.png'),
+      Nova: require('../../../assets/Nv.png'),
     };
 
     const homeImage = homeImages[selectedCharacter.name];
