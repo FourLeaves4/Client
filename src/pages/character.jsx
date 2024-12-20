@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, FlatList, Dimensions, TouchableOpacity, Animated } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
 import Header from '../components/Character/Header';
 import CharacterDisplay from '../components/Character/CharacterDisplay';
 import Description from '../components/Character/Description';
@@ -18,32 +25,32 @@ export default function Character({ route, navigation }) {
     {
       id: 1,
       name: 'FrontEnd',
-      image: require('../../assets/FrontEndCharacter.png'),
-      selectedImage: require('../../assets/FrontEndCharacterSelected.png'),
+      image: require('../../assets/고화질fe.png'),
+      selectedImage: require('../../assets/살려줘.png'),
     },
     {
       id: 2,
       name: 'BackEnd',
-      image: require('../../assets/BackEndCharacter.png'),
-      selectedImage: require('../../assets/BackEndCharacterSelected.png'),
+      image: require('../../assets/고화질.be.png'),
+      selectedImage: require('../../assets/고화질선택be.png'),
     },
     {
       id: 3,
       name: 'iOS',
-      image: require('../../assets/IOSCharacter.png'),
-      selectedImage: require('../../assets/IOSCharacterSelected.png'),
+      image: require('../../assets/고화질ios2.png'),
+      selectedImage: require('../../assets/고화질선택ios.png'),
     },
     {
       id: 4,
       name: 'Android',
-      image: require('../../assets/AndroidCharacter.png'),
-      selectedImage: require('../../assets/AndroidCharacterSelected.png'),
+      image: require('../../assets/고화질ad.png'),
+      selectedImage: require('../../assets/고화질선택ad.png'),
     },
     {
       id: 5,
       name: 'Nova',
-      image: require('../../assets/NovaCharacter.png'),
-      selectedImage: require('../../assets/NovaCharacterSelected.png'),
+      image: require('../../assets/고화질nv.png'),
+      selectedImage: require('../../assets/고화질선택.nv.png'),
     },
   ]);
 
@@ -93,7 +100,9 @@ export default function Character({ route, navigation }) {
             ? '이 캐릭터로 하실건가요?'
             : '제 모습을 선택해 주세요.'
         }
-        subtitle={selectedCharacter ? selectedCharacter.name : '어떨 것 같아요?'}
+        subtitle={
+          selectedCharacter ? selectedCharacter.name : '어떨 것 같아요?'
+        }
         fadeAnim={fadeAnim} // 애니메이션 값 전달
       />
 
@@ -136,7 +145,10 @@ export default function Character({ route, navigation }) {
 
       <Description />
 
-      <CharacterButton navigation={navigation} selectedCharacter={selectedCharacter} />
+      <CharacterButton
+        navigation={navigation}
+        selectedCharacter={selectedCharacter}
+      />
     </View>
   );
 }
