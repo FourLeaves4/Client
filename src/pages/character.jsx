@@ -38,13 +38,13 @@ export default function Character({ route, navigation }) {
       id: 3,
       name: 'iOS',
       image: require('../../assets/고화질ios2.png'),
-      selectedImage: require('../../assets/고화질선택ios.png'),
+      selectedImage: require('../../assets/고화질선택ios2.png'),
     },
     {
       id: 4,
       name: 'Android',
       image: require('../../assets/고화질ad.png'),
-      selectedImage: require('../../assets/고화질선택ad.png'),
+      selectedImage: require('../../assets/고화질선택ad2.png'),
     },
     {
       id: 5,
