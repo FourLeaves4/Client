@@ -36,7 +36,7 @@ const PlanScreen = () => {
       <LabeledDivider title="이번 주 달성률" />
       {/* MascotWithMessage 컴포넌트 */}
       <MascotWithMessage
-        mascotImage={require('../../assets/Mascot.png')}
+        mascotImage={require('../../assets/Mascot1.png')}
         message="이번 주 평균 달성률은"
         highlight={highlight} // 동적 이번 주 평균 달성률 표시
       />
