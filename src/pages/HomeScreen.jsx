@@ -13,35 +13,52 @@ function HomeScreen({ route }) {
 
   const BASE_URL = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app';
 
- 
   useEffect(() => {
-    const fetchMissions = async () => {
-      if (!character?.major) {
-        console.error('캐릭터의 major 값이 없습니다.');
-        return;
-      }
-  
+    const postMajorAndFetchMissions = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/home/${character.major}/mission`);
-        console.log('백엔드 응답:', response.data);
-  
-        const missionData = response.data.mission.map((text, index) => ({
+        // POST 요청
+        console.log('POST 요청 URL:', `${BASE_URL}/home/${userId || 1}/mission`);
+        const postResponse = await axios.post(
+          `${BASE_URL}/home/${userId || 1}/mission`,
+          { major: character.major }, // major 값 전달
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+        console.log('POST 요청 응답:', postResponse.data);
+    
+        // GET 요청
+        console.log('GET 요청 URL:', `${BASE_URL}/home/${userId || 1}/mission`);
+        const getResponse = await axios.get(`${BASE_URL}/home/${userId || 1}/mission`);
+        console.log('GET 요청 응답:', getResponse.data);
+    
+        const missionData = getResponse.data.mission.map((mission, index) => ({
           id: `M${index}`,
-          text,
+          text: mission,
           completed: false,
         }));
         setMissions(missionData);
       } catch (error) {
-        console.error('미션 데이터 가져오기 실패:', error);
-        Alert.alert('오류', '미션 데이터를 가져오는 데 실패했습니다.');
+        if (error.response) {
+          console.error('응답 오류:', error.response.data);
+          Alert.alert('오류', `서버 오류: ${error.response.data.message || '요청 실패'}`);
+        } else if (error.request) {
+          console.error('요청 오류:', error.request);
+          Alert.alert('오류', '서버에 응답이 없습니다. 네트워크를 확인하세요.');
+        } else {
+          console.error('설정 오류:', error.message);
+          Alert.alert('오류', '요청을 보내는 중 문제가 발생했습니다.');
+        }
       } finally {
         setLoading(false);
       }
     };
+    
   
-    fetchMissions();
-  }, [character?.major]);
+    if (character && character.major) {
+      postMajorAndFetchMissions();
+    }
+  }, [userId, character]);
   
+
   if (!character) {
     return (
       <View style={styles.container}>

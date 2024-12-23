@@ -72,24 +72,20 @@ export default function Character({ route, navigation }) {
     },
   ]);  
 
+
   useEffect(() => {
-    setCharacters((prev) => {
-      const recommendedCharacter = prev.find(
-        (character) => character.name === majorName
-      );
-
-      if (recommendedCharacter) {
-        return [
-          recommendedCharacter,
-          ...prev.filter((c) => c.name !== majorName),
-        ];
-      }
-
-      return prev;
-    });
-  }, [majorName]);
+    const recommendedCharacter = characters.find((char) => char.major === recommendedMajor);
+    if (recommendedCharacter) {
+      setCharacters((prev) => [
+        recommendedCharacter,
+        ...prev.filter((c) => c.major !== recommendedMajor),
+      ]);
+    }
+  }, [recommendedMajor]);
+  
 
   const handleCharacterSelect = (character, index) => {
+    console.log('선택된 캐릭터:', character); // 로그 추가
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 300,
