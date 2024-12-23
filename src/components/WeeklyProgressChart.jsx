@@ -2,27 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
-const WeeklyProgressChart = () => {
-  //const [data, setData] = useState([]);
-  const data = [80, 60, 80, 100, 40, 100, 60];
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/api/weekly-progress');
-        setData(response.data);
-        setIsLoading(false);
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setIsLoading(false);
-        setError('데이터를 가져오는 데 실패했습니다.');
-      }
-    };
-    fetchData();
-  }, []);
-
+const WeeklyProgressChart = ({ week, isLoading, error }) => {
   return (
     <View style={styles.box}>
       {isLoading ? (
@@ -32,7 +12,7 @@ const WeeklyProgressChart = () => {
         </View>
       ) : error ? (
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
+          <Text style={styles.errorText}>{error.message || error}</Text>
         </View>
       ) : (
         <View style={styles.view}>
@@ -46,7 +26,7 @@ const WeeklyProgressChart = () => {
           </View>
           {/* 그래프 바 */}
           <View style={styles.barsContainer}>
-            {data.map((value, index) => (
+            {week.map((value, index) => (
               <View key={index} style={styles.barWrapper}>
                 <View
                   style={[styles.bar, { height: `${value}%` }]} // 높이를 데이터에 따라 동적으로 설정
@@ -71,15 +51,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(102, 102, 102, 0.25)',
     borderRadius: 10,
     marginVertical: 16,
-    marginTop: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
+
+    justifyContent: 'flex-end',
   },
   view: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
     height: 200,
+    paddingTop: 16,
   },
   labelsContainer: {
     justifyContent: 'space-between',
@@ -89,10 +69,12 @@ const styles = StyleSheet.create({
   yAxisLabel: {
     color: '#fff',
     fontSize: 12,
+    padding: 5,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   barsContainer: {
+    marginTop: 8,
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
@@ -103,14 +85,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   bar: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#FBF15B',
     width: 24,
-    borderRadius: 4,
+    borderRadius: 16,
   },
   xAxisLabel: {
     color: '#fff',
-    fontSize: 12,
-    marginTop: 8,
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 6,
   },
   loadingContainer: {
     flex: 1,
