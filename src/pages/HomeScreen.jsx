@@ -1,20 +1,63 @@
-import React, { useState } from 'react';
-import { View, Image, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Image, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import ProfileCard from '../components/ProfileCard';
+import axios from 'axios';
 
 function HomeScreen({ route }) {
-  const { character } = route.params || {};
+  const { character, userId } = route.params || {};
 
-  // 초기 미션 데이터 (5개로 확장)
-  const initialMissions = [
-    { id: 'A', text: '😄 전공 공부하기', completed: false },
-    { id: 'B', text: '📘 React 공부하기', completed: false },
-    { id: 'C', text: '💻 프로젝트 완성하기', completed: false },
-    { id: 'D', text: '📝 문서 작성하기', completed: false }, // 추가된 미션 1
-    { id: 'E', text: '🚀 새로운 기술 배우기', completed: false }, // 추가된 미션 2
-  ];
+  console.log('전달받은 캐릭터 데이터:', character);
 
-  const [missions, setMissions] = useState(initialMissions);
+  const [missions, setMissions] = useState([]); // 초기 미션 데이터 비워두기
+  const [loading, setLoading] = useState(true);
+
+  const BASE_URL = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app';
+
+  useEffect(() => {
+    const postMajorAndFetchMissions = async () => {
+      try {
+        // POST 요청
+        console.log('POST 요청 URL:', `${BASE_URL}/home/${userId || 1}/mission`);
+        const postResponse = await axios.post(
+          `${BASE_URL}/home/${userId || 1}/mission`,
+          { major: character.major }, // major 값 전달
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+        console.log('POST 요청 응답:', postResponse.data);
+    
+        // GET 요청
+        console.log('GET 요청 URL:', `${BASE_URL}/home/${userId || 1}/mission`);
+        const getResponse = await axios.get(`${BASE_URL}/home/${userId || 1}/mission`);
+        console.log('GET 요청 응답:', getResponse.data);
+    
+        const missionData = getResponse.data.mission.map((mission, index) => ({
+          id: `M${index}`,
+          text: mission,
+          completed: false,
+        }));
+        setMissions(missionData);
+      } catch (error) {
+        if (error.response) {
+          console.error('응답 오류:', error.response.data);
+          Alert.alert('오류', `서버 오류: ${error.response.data.message || '요청 실패'}`);
+        } else if (error.request) {
+          console.error('요청 오류:', error.request);
+          Alert.alert('오류', '서버에 응답이 없습니다. 네트워크를 확인하세요.');
+        } else {
+          console.error('설정 오류:', error.message);
+          Alert.alert('오류', '요청을 보내는 중 문제가 발생했습니다.');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+  
+    if (character && character.major) {
+      postMajorAndFetchMissions();
+    }
+  }, [userId, character]);
+  
 
   if (!character) {
     return (
@@ -39,6 +82,14 @@ function HomeScreen({ route }) {
       return [...incompleteMissions, ...completedMissions];
     });
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>미션 로딩 중...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -143,6 +194,17 @@ const styles = StyleSheet.create({
   },
   completedText: {
     color: '#aaa', // 완료된 버튼 텍스트 색상 변경
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+  },
+  loadingText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
