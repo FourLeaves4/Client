@@ -17,6 +17,19 @@ const { width } = Dimensions.get('window');
 
 export default function Character({ route, navigation }) {
   const { recommendedMajor } = route.params;
+
+  // 숫자를 문자열로 매핑
+  const majorMap = {
+    1: "FrontEnd",
+    2: "BackEnd",
+    3: "iOS",
+    4: "Android",
+    5: "Nova",
+  };
+
+  // recommendedMajor를 문자열로 변환
+  const majorName = majorMap[recommendedMajor] || "Unknown";
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCharacter, setSelectedCharacter] = useState(null); // 초기 상태는 null
   const flatListRef = useRef(null);
@@ -24,59 +37,60 @@ export default function Character({ route, navigation }) {
   const [characters, setCharacters] = useState([
     {
       id: 1,
-      name: 'FrontEnd',
+      name: "FrontEnd",
       image: require('../../assets/고화질fe.png'),
       selectedImage: require('../../assets/살려줘.png'),
     },
     {
       id: 2,
-      name: 'BackEnd',
+      name: "BackEnd",
       image: require('../../assets/고화질.be.png'),
       selectedImage: require('../../assets/고화질선택be.png'),
     },
     {
       id: 3,
-      name: 'iOS',
+      name: "iOS",
       image: require('../../assets/고화질ios2.png'),
       selectedImage: require('../../assets/고화질선택ios2.png'),
     },
     {
       id: 4,
-      name: 'Android',
+      name: "Android",
       image: require('../../assets/고화질ad.png'),
       selectedImage: require('../../assets/고화질선택ad2.png'),
     },
     {
       id: 5,
-      name: 'Nova',
+      name: "Nova",
       image: require('../../assets/고화질nv.png'),
       selectedImage: require('../../assets/고화질선택.nv.png'),
     },
   ]);
 
   useEffect(() => {
-    // 추천 캐릭터를 최상단에 추가
-    const recommendedCharacter = characters.find(
-      (character) => character.name === recommendedMajor
-    );
+    setCharacters((prev) => {
+      const recommendedCharacter = prev.find(
+        (character) => character.name === majorName
+      );
 
-    if (recommendedCharacter) {
-      setCharacters((prev) => [
-        recommendedCharacter,
-        ...prev.filter((c) => c.name !== recommendedMajor),
-      ]);
-    }
-  }, [recommendedMajor]);
+      if (recommendedCharacter) {
+        return [
+          recommendedCharacter,
+          ...prev.filter((c) => c.name !== majorName),
+        ];
+      }
+
+      return prev;
+    });
+  }, [majorName]);
 
   const handleCharacterSelect = (character, index) => {
-    // 페이드 아웃 애니메이션
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 300,
       useNativeDriver: true,
     }).start(() => {
-      setSelectedCharacter(character); // 캐릭터 선택
-      // 페이드 인 애니메이션
+      setSelectedCharacter(character);
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 300,
@@ -84,7 +98,6 @@ export default function Character({ route, navigation }) {
       }).start();
     });
 
-    // FlatList 자동 스크롤
     flatListRef.current.scrollToIndex({
       animated: true,
       index,
@@ -93,22 +106,18 @@ export default function Character({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Header 업데이트 */}
       <Header
         title={
           selectedCharacter
-            ? '이 캐릭터로 하실건가요?'
-            : '제 모습을 선택해 주세요.'
+            ? "이 캐릭터로 하실건가요?"
+            : "제 모습을 선택해 주세요."
         }
-        subtitle={
-          selectedCharacter ? selectedCharacter.name : '어떨 것 같아요?'
-        }
-        fadeAnim={fadeAnim} // 애니메이션 값 전달
+        subtitle={selectedCharacter ? selectedCharacter.name : majorName}
+        fadeAnim={fadeAnim}
       />
 
-      {/* 캐릭터 슬라이드 */}
       <FlatList
-        ref={flatListRef} // FlatList 참조 설정
+        ref={flatListRef}
         horizontal
         pagingEnabled
         data={characters}
@@ -124,7 +133,7 @@ export default function Character({ route, navigation }) {
                   ? { ...item, image: item.selectedImage }
                   : item
               }
-              isRecommended={item.name === recommendedMajor}
+              isRecommended={item.name === majorName}
               isSelected={selectedCharacter?.id === item.id}
             />
           </TouchableOpacity>
@@ -140,7 +149,6 @@ export default function Character({ route, navigation }) {
         contentContainerStyle={styles.flatListContent}
       />
 
-      {/* Pagination Dots */}
       <PaginationDots totalDots={characters.length} activeDot={currentIndex} />
 
       <Description />
@@ -156,23 +164,23 @@ export default function Character({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#111111',
-    alignItems: 'center',
+    backgroundColor: "#111111",
+    alignItems: "center",
     padding: 16,
   },
   flatList: {
     flexGrow: 0,
     width: width,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   flatListContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   slide: {
     width,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 16,
   },
 });

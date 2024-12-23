@@ -1,6 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Animated, Text, StyleSheet, Dimensions } from 'react-native';
 
+// RecommendedMajor 컴포넌트를 가져와 재사용 가능
+import RecommendedMajor from '../Character/RecomendedMajor';
+
 export default function CharacterDisplay({ character, isRecommended, isSelected }) {
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -21,10 +24,9 @@ export default function CharacterDisplay({ character, isRecommended, isSelected 
 
   return (
     <View style={[styles.container]}>
+      {/* RecommendedMajor 사용 */}
       {isRecommended && (
-        <View style={styles.badgeContainer}>
-          <Text style={styles.badgeText}>Rec</Text>
-        </View>
+        <RecommendedMajor major="추천 캐릭터" />
       )}
       <Animated.Image
         source={isSelected ? character.selectedImage : character.image}
@@ -43,20 +45,6 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.7,
     backgroundColor: '#111111',
     marginTop: 130,
-  },
-  badgeContainer: {
-    backgroundColor: '#6f1010',
-    paddingHorizontal: 24,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginBottom: 10,
-    alignSelf: 'center',
-  },
-  badgeText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
   image: {
     width: '90%',
