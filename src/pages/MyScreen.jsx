@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import ProfileSection from '../components/profileSection';
 import LevelBarSection from '../components/LevelBarSection';
 import LevelLabel from '../components/LevelLabel';
@@ -10,18 +10,43 @@ import GrassBoard from '../components/GrassBoard';
 import LogOut from '../components/LogOut';
 
 export default function MyScreen() {
+  // 사용자 ID를 동적으로 설정 (예: userId 변수를 통해)
+  const userId = '1'; // 실제 사용자 ID로 대체
+  // 🔥 백엔드 API URL (실제 서버 주소로 교체)
+  // 상태로 백엔드 데이터를 저장할 변수 설정
+  const [profileData, setProfileData] = useState(null);
+
+  // useEffect를 사용하여 컴포넌트가 마운트될 때 데이터 로드
+  useEffect(() => {
+    // API 호출 예시 (백엔드 URL에 맞게 수정)
+    fetch(
+      `https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app/home/${userId}/profile`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setProfileData(data); // 데이터를 상태에 저장
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  // 데이터가 없으면 로딩 중 표시
+  if (!profileData) {
+    return <Text>Loading...</Text>;
+  }
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         {/* 상단 섹션: ProfileSection + LevelBarSection */}
         <View style={styles.topSection}>
-          <ProfileSection />
-          <LevelBarSection />
-          <LevelLabel />
-          <DeveloperStep />
+          <ProfileSection name={profileData.name} email={profileData.email} />
+          <LevelBarSection num={profileData.num} />
+          <LevelLabel level={profileData.level} />
+          <DeveloperStep level={profileData.level} />
           <DeveloperStageButton />
-          <CompletionLabel />
-          <GrassBoard />
+          <CompletionLabel sum={profileData.sum} />
+          <GrassBoard month={profileData.month} />
         </View>
 
         {/* 다른 UI 요소들 추가 */}
