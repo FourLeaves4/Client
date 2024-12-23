@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 
 // 베이스 URL + 엔드포인트
-const BASE_URL = 'https://your-backend-server.com'; // 실제 백엔드 베이스 URL
-const ENDPOINT = '/auth/major';
+const BASE_URL = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app';
+const ENDPOINT = '/home/1/mission';
 
 const questions = [
   {
@@ -46,41 +46,58 @@ export default function Question({ navigation }) {
 
   function getRecommendedMajor(answers) {
     console.log('선택된 답변: ', answers);
-
-    if (answers[3] === '애플이 만든 기기에서의 성능 최적화') return 'iOS';
-    if (answers[3] === '안드로이드 기기와의 호환성') return 'Android';
-    if (answers[3] === '데이터 처리의 효율성과 보안') return 'BackEnd';
-    if (answers[1] === '웹 개발' || answers[2] === '눈에 바로 보이는 결과물')
-      return 'FrontEnd';
-
-    return 'Nova';
+  
+    // 전공별 ID 값 매핑
+    if (answers[3] === '애플이 만든 기기에서의 성능 최적화') return 3; // iOS 전공 ID
+    if (answers[3] === '안드로이드 기기와의 호환성') return 4; // Android 전공 ID
+    if (answers[3] === '데이터 처리의 효율성과 보안') return 2; // BackEnd 전공 ID
+    if (answers[1] === '웹 개발' || answers[2] === '눈에 바로 보이는 결과물') return 1; // FrontEnd 전공 ID
+  
+    return 0; // 기본값
   }
+  
 
+  
   async function sendData() {
     console.log('sendData 호출됨');
-
+  
+    // 전공 추천 ID를 가져옴
     const recommendedMajor = getRecommendedMajor(selectedAnswers);
-
+  
+    // 서버로 보낼 데이터
     const surveyData = {
-      answers: selectedAnswers,
-      recommendedMajor: recommendedMajor,
-      timestamp: new Date().toISOString(),
+      major: recommendedMajor, // major 값만 포함
     };
-
+  
     try {
-      console.log('서버로 데이터 전송 중:', surveyData);
-
-      const response = await axios.post(`${BASE_URL}${ENDPOINT}`, surveyData);
-
+      console.log('POST URL:', `${BASE_URL}${ENDPOINT}`);
+      console.log('POST 데이터:', JSON.stringify(surveyData));
+  
+      // 서버로 POST 요청
+      const response = await axios.post(`${BASE_URL}${ENDPOINT}`, surveyData, {
+        headers: {
+          'Content-Type': 'application/json', // JSON 형식 명시
+        },
+      });
+  
       console.log('서버 응답:', response.data);
-
-      // 서버로 데이터 전송 성공 시 Character 페이지로 이동
+  
+      // 성공 시 캐릭터 페이지로 이동
       navigation.navigate('Character', { recommendedMajor });
     } catch (error) {
       console.error('데이터 전송 오류:', error);
-      Alert.alert('오류', '서버로 데이터를 전송할 수 없습니다.');
+  
+      // 에러 처리
+      if (error.response) {
+        console.error('응답 데이터:', error.response.data);
+        Alert.alert('오류', `서버 오류: ${error.response.data.message || '요청 실패'}`);
+      } else {
+        Alert.alert('오류', '네트워크 오류가 발생했습니다.');
+      }
     }
   }
+  
+  
 
   function handleAnswer(questionId, answer) {
     setSelectedAnswers((prevAnswers) => {
