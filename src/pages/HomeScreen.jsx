@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
-import { View, Image, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Image, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import ProfileCard from '../components/ProfileCard';
+import axios from 'axios';
 
 function HomeScreen({ route }) {
-  const { character } = route.params || {};
+  const { character, userId } = route.params || {};
+  const [missions, setMissions] = useState([]); // 초기 미션 데이터 비워두기
+  const [loading, setLoading] = useState(true);
 
-  // 초기 미션 데이터 (5개로 확장)
-  const initialMissions = [
-    { id: 'A', text: '😄 전공 공부하기', completed: false },
-    { id: 'B', text: '📘 React 공부하기', completed: false },
-    { id: 'C', text: '💻 프로젝트 완성하기', completed: false },
-    { id: 'D', text: '📝 문서 작성하기', completed: false }, // 추가된 미션 1
-    { id: 'E', text: '🚀 새로운 기술 배우기', completed: false }, // 추가된 미션 2
-  ];
+  const BASE_URL = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app';
 
-  const [missions, setMissions] = useState(initialMissions);
+  useEffect(() => {
+    // 백엔드에서 미션 데이터를 가져오는 함수
+    const fetchMissions = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/home/1/mission`);
+        console.log('백엔드 응답:', response.data);
+
+        // 미션 데이터를 state에 저장
+        const missionData = response.data.mission.map((text, index) => ({
+          id: `M${index}`, // 각 미션에 고유 ID 부여
+          text,
+          completed: false, // 초기에는 모두 미완료 상태로 설정
+        }));
+        setMissions(missionData);
+      } catch (error) {
+        console.error('미션 데이터 가져오기 실패:', error);
+        Alert.alert('오류', '미션 데이터를 가져오는 데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMissions();
+  }, [userId]);
 
   if (!character) {
     return (
@@ -39,6 +58,14 @@ function HomeScreen({ route }) {
       return [...incompleteMissions, ...completedMissions];
     });
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>미션 로딩 중...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -143,6 +170,17 @@ const styles = StyleSheet.create({
   },
   completedText: {
     color: '#aaa', // 완료된 버튼 텍스트 색상 변경
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+  },
+  loadingText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
