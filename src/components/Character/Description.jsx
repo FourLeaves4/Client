@@ -5,7 +5,7 @@ export default function Description() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
-        캐릭터 꾸미기 메뉴에서{'\n'}마음에 드는 모습으로 변경할 수 있어요.
+      이 캐릭터와 함께 개발자로서{'\n'} 성장하고 도전하는 여정을 시작해보세요
       </Text>
     </View>
   );
