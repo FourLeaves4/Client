@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
-const ProfileSection = () => {
+const ProfileSection = ({ name, email }) => {
   return (
     // 부모 컨테이너 추가 (이 요소의 위치를 조정)
     <View style={styles.wrapper}>
@@ -16,8 +16,8 @@ const ProfileSection = () => {
               />
               {/* 텍스트 그룹 */}
               <View style={styles.textGroup}>
-                <Text style={styles.textName}>김봄</Text>
-                <Text style={styles.textEmail}>s24040@gsm.hs.kr</Text>
+                <Text style={styles.textName}>{name}</Text>
+                <Text style={styles.textEmail}>{email}</Text>
               </View>
             </View>
           </View>
