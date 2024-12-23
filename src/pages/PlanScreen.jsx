@@ -9,20 +9,29 @@ import WeeklyProgressChart from '../components/WeeklyProgressChart';
 const PlanScreen = () => {
   // 1️⃣ highlight 값을 관리하는 상태 추가 (기본값은 0%)
   const [highlight, setHighlight] = useState('0%');
+  const [weekData, setWeekData] = useState([]); // week 데이터를 관리하는 상태
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // 백엔드에서 avg 데이터 불러오기
   useEffect(() => {
     const fetchHighlightData = async () => {
       try {
+        // 사용자 ID를 동적으로 설정 (예: userId 변수를 통해)
+        const userId = '1'; // 실제 사용자 ID로 대체
         // 🔥 백엔드 API URL (실제 서버 주소로 교체)
         const response = await fetch(
-          'https://your-backend-url.com/api/highlight'
+          `https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app/home/${userId}/plan`
         );
         const data = await response.json(); // JSON 데이터 파싱
         console.log('백엔드 데이터: ', data); // 데이터 확인
         setHighlight(`${data.avg}%`); // avg를 highlight에 적용
+        setWeekData(data.week); // 백엔드에서 받아온 week 데이터를 상태에 저장
       } catch (error) {
         console.error('데이터 불러오기 오류: ', error);
+        setError('데이터를 가져오는 데 실패했습니다.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -41,7 +50,11 @@ const PlanScreen = () => {
         highlight={highlight} // 동적 이번 주 평균 달성률 표시
       />
       <LabeledDivider title="요일별 달성률" />
-      <WeeklyProgressChart />
+      <WeeklyProgressChart
+        week={weekData}
+        isLoading={isLoading}
+        error={error}
+      />
     </View>
   );
 };
