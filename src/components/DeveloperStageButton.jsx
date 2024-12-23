@@ -3,14 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ChevronRight from '../../assets/chevron-right.svg'; // SVG 파일 import
 import { useNavigation } from '@react-navigation/native';
 const DeveloperStageButton = () => {
-
   const navigation = useNavigation();
 
   return (
     <TouchableOpacity
-     style={styles.box}
-     onPress={() => navigation.navigate('DeveloperStageScreen')} // 페이지 이동
-     >
+      style={styles.box}
+      onPress={() => navigation.navigate('DeveloperStageScreen')} // 페이지 이동
+    >
       <View style={styles.group}>
         <View style={styles.frame}>
           {/* 왼쪽 텍스트 그룹 */}
@@ -65,7 +64,7 @@ const styles = StyleSheet.create({
     color: '#1f1f20c7',
     fontSize: 16,
     fontFamily: 'Pretendard-Regular',
-    fontWeight: '400',
+    fontWeight: 'bold',
     textAlign: 'center',
     lineHeight: 22,
     marginLeft: 8, // 아이콘과 텍스트 간격

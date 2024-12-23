@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const CompletionLabel = () => {
+const CompletionLabel = ({ sum }) => {
   return (
     <View style={styles.label}>
-      <Text style={styles.textWrapper}>415 completed in the last month</Text>
+      <Text style={styles.textWrapper}>{sum} completed in the last month</Text>
     </View>
   );
 };

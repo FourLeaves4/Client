@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 
 // 화면 크기 동적 계산
@@ -15,46 +15,7 @@ const colors = [
   '#fbf15b',
 ];
 
-// 🌐 백엔드 API URL (user_id는 동적으로 설정)
-const API_URL = (userId) => `https://your-backend-url.com/${userId}/profile`;
-
-export default function GrassBoard({ userId }) {
-  const [grassData, setGrassData] = useState([]); // 초기값을 빈 배열로 설정
-  const [loading, setLoading] = useState(true); // 로딩 상태 추가
-
-  // 📡 백엔드 API 호출
-  useEffect(() => {
-    const fetchGrassData = async () => {
-      try {
-        /* // 백엔드 API에서 데이터를 받아오는 부분
-        const data = {
-          month: [
-            3, 5, 4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 2, 5, 4, 0, 3, 0, 0, 0,
-            0, 0, 5, 4, 3, 2, 1, 0,
-          ],
-        }; */
-
-        const response = await fetch(API_URL(userId)); // userId를 동적으로 URL에 포함
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json(); // JSON 데이터 파싱
-
-        if (data && data.month) {
-          setGrassData(data.month); // 상태에 'month' 데이터 저장
-        } else {
-          throw new Error('Invalid response: month data is missing');
-        }
-      } catch (error) {
-        console.error('Error fetching grass data:', error); // 에러 메시지 출력
-      } finally {
-        setLoading(false); // 로딩 상태 해제
-      }
-    };
-
-    fetchGrassData(); // 데이터 요청
-  }, [userId]); // // userId가 변경되면 데이터 요청
-
+export default function GrassBoard({ month }) {
   // 🖌️ 투명도 색상을 스타일로 반환하는 함수
   const getGrassStyle = useCallback(
     (value) => ({ backgroundColor: colors[value] }),
@@ -62,7 +23,7 @@ export default function GrassBoard({ userId }) {
   );
 
   // 📟 로딩 중일 때 로딩 인디케이터 표시
-  if (loading) {
+  if (!month) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#fbf15b" />
@@ -72,7 +33,7 @@ export default function GrassBoard({ userId }) {
 
   return (
     <View style={styles.frame}>
-      {grassData.map((value, index) => (
+      {month.map((value, index) => (
         <View key={index} style={[styles.commonGrass, getGrassStyle(value)]} />
       ))}
     </View>

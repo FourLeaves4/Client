@@ -1,20 +1,59 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
-const DeveloperStep = () => {
+const DeveloperStep = ({ level }) => {
+  // 레벨에 따라 뱃지와 직책 결정
+  const getBadgeAndTitle = (level) => {
+    if (level >= 1 && level <= 5) {
+      return {
+        title: '입문자!',
+        icon: require('../../assets/badge1.png'),
+      };
+    }
+    if (level >= 6 && level <= 10) {
+      return {
+        title: '인턴 개발자!',
+        icon: require('../../assets/badge2.png'),
+      };
+    }
+    if (level >= 11 && level <= 15) {
+      return {
+        title: '주니어 개발자!',
+        icon: require('../../assets/badge3.png'),
+      };
+    }
+    if (level >= 16 && level <= 20) {
+      return {
+        title: '미드레벨 개발자!',
+        icon: require('../../assets/badge4.png'),
+      };
+    }
+    if (level >= 21 && level <= 25) {
+      return {
+        title: '시니어 개발자!',
+        icon: require('../../assets/badge5.png'),
+      };
+    }
+    if (level >= 26) {
+      return {
+        title: '최고 레벨!',
+        icon: require('../../assets/badge5.png'),
+      };
+    }
+  };
+
+  const { title, icon } = getBadgeAndTitle(level);
+
   return (
     <View style={styles.box}>
       <View style={styles.group}>
         {/* 텍스트 그룹 */}
         <View style={styles.textContainer}>
           <Text style={styles.textWrapper}>Your Step is</Text>
-          <Text style={styles.textWrapper2}>Junior Developer!</Text>
+          <Text style={styles.textWrapper2}>{title}</Text>
         </View>
         {/* 이미지 */}
-        <Image
-          style={styles.element}
-          source={require('../../assets/badge.png')}
-        />
+        <Image style={styles.element} source={icon} />
       </View>
     </View>
   );
@@ -52,11 +91,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     lineHeight: 22, // line-height 대체
+    fontWeight: 'bold',
   },
   textWrapper2: {
+    fontWeight: 'bold',
     position: 'absolute',
     top: 6,
-    left: 91,
+    left: 100,
     textShadowColor: '#ffffff21', // -webkit-text-stroke 대체
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
