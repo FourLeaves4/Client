@@ -40,32 +40,37 @@ export default function Character({ route, navigation }) {
       name: "FrontEnd",
       image: require('../../assets/고화질fe.png'),
       selectedImage: require('../../assets/살려줘.png'),
+      major: 1, // FrontEnd의 major 값
     },
     {
       id: 2,
       name: "BackEnd",
       image: require('../../assets/고화질.be.png'),
       selectedImage: require('../../assets/고화질선택be.png'),
+      major: 2, // BackEnd의 major 값
     },
     {
       id: 3,
       name: "iOS",
       image: require('../../assets/고화질ios2.png'),
       selectedImage: require('../../assets/고화질선택ios2.png'),
+      major: 3, // iOS의 major 값
     },
     {
       id: 4,
       name: "Android",
       image: require('../../assets/고화질ad.png'),
       selectedImage: require('../../assets/고화질선택ad2.png'),
+      major: 4, // Android의 major 값
     },
     {
       id: 5,
       name: "Nova",
       image: require('../../assets/고화질nv.png'),
       selectedImage: require('../../assets/고화질선택.nv.png'),
+      major: 5, // Nova의 major 값
     },
-  ]);
+  ]);  
 
   useEffect(() => {
     setCharacters((prev) => {

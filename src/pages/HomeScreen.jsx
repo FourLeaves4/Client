@@ -5,23 +5,30 @@ import axios from 'axios';
 
 function HomeScreen({ route }) {
   const { character, userId } = route.params || {};
+
+  console.log('전달받은 캐릭터 데이터:', character);
+
   const [missions, setMissions] = useState([]); // 초기 미션 데이터 비워두기
   const [loading, setLoading] = useState(true);
 
   const BASE_URL = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app';
 
+ 
   useEffect(() => {
-    // 백엔드에서 미션 데이터를 가져오는 함수
     const fetchMissions = async () => {
+      if (!character?.major) {
+        console.error('캐릭터의 major 값이 없습니다.');
+        return;
+      }
+  
       try {
-        const response = await axios.get(`${BASE_URL}/home/1/mission`);
+        const response = await axios.get(`${BASE_URL}/home/${character.major}/mission`);
         console.log('백엔드 응답:', response.data);
-
-        // 미션 데이터를 state에 저장
+  
         const missionData = response.data.mission.map((text, index) => ({
-          id: `M${index}`, // 각 미션에 고유 ID 부여
+          id: `M${index}`,
           text,
-          completed: false, // 초기에는 모두 미완료 상태로 설정
+          completed: false,
         }));
         setMissions(missionData);
       } catch (error) {
@@ -31,10 +38,10 @@ function HomeScreen({ route }) {
         setLoading(false);
       }
     };
-
+  
     fetchMissions();
-  }, [userId]);
-
+  }, [character?.major]);
+  
   if (!character) {
     return (
       <View style={styles.container}>

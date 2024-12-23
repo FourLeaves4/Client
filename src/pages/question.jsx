@@ -60,43 +60,13 @@ export default function Question({ navigation }) {
   
   async function sendData() {
     console.log('sendData 호출됨');
-  
-    // 전공 추천 ID를 가져옴
     const recommendedMajor = getRecommendedMajor(selectedAnswers);
   
-    // 서버로 보낼 데이터
-    const surveyData = {
-      major: recommendedMajor, // major 값만 포함
-    };
+    console.log('추천 전공 ID:', recommendedMajor);
   
-    try {
-      console.log('POST URL:', `${BASE_URL}${ENDPOINT}`);
-      console.log('POST 데이터:', JSON.stringify(surveyData));
-  
-      // 서버로 POST 요청
-      const response = await axios.post(`${BASE_URL}${ENDPOINT}`, surveyData, {
-        headers: {
-          'Content-Type': 'application/json', // JSON 형식 명시
-        },
-      });
-  
-      console.log('서버 응답:', response.data);
-  
-      // 성공 시 캐릭터 페이지로 이동
-      navigation.navigate('Character', { recommendedMajor });
-    } catch (error) {
-      console.error('데이터 전송 오류:', error);
-  
-      // 에러 처리
-      if (error.response) {
-        console.error('응답 데이터:', error.response.data);
-        Alert.alert('오류', `서버 오류: ${error.response.data.message || '요청 실패'}`);
-      } else {
-        Alert.alert('오류', '네트워크 오류가 발생했습니다.');
-      }
-    }
+    // 설문 결과를 기반으로 캐릭터 선택 화면으로 이동
+    navigation.navigate('Character', { recommendedMajor });
   }
-  
   
 
   function handleAnswer(questionId, answer) {
