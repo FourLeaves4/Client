@@ -1,13 +1,8 @@
 import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 
-const ImageComponent = () => {
-  return (
-    <Image
-      style={styles.mainIcon}
-      source={require('../../assets/badge.png')}
-    />
-  );
+const ImageComponent = ({ badge }) => {
+  return <Image style={styles.mainIcon} source={badge} />;
 };
 
 const styles = StyleSheet.create({
@@ -16,7 +11,6 @@ const styles = StyleSheet.create({
     height: 109,
     marginBottom: 36,
     marginTop: 150,
-
   },
 });
 

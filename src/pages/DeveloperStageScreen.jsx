@@ -76,17 +76,17 @@ const DeveloperStageScreen = () => {
 
   // 레벨에 맞는 배지 선택
   const getBadge = () => {
-    if (level >= 1 && level <= 5) return require('../../assets/badge.png');
-    if (level >= 6 && level <= 10) return require('../../assets/badge.png');
-    if (level >= 11 && level <= 15) return require('../../assets/badge.png');
-    if (level >= 16 && level <= 20) return require('../../assets/badge.png');
-    if (level >= 21 && level <= 25) return require('../../assets/badge.png');
+    if (level >= 1 && level <= 5) return require('../../assets/badge1.png');
+    if (level >= 6 && level <= 10) return require('../../assets/badge2.png');
+    if (level >= 11 && level <= 15) return require('../../assets/badge3.png');
+    if (level >= 16 && level <= 20) return require('../../assets/badge4.png');
+    if (level >= 21 && level <= 25) return require('../../assets/badge5.png');
   };
 
   return (
     <ScrollView contentContainerStyle={styles.content}>
       {/* 메인 아이콘 */}
-      <ImageComponent />
+      <ImageComponent badge={getBadge()} />
 
       {/* 레벨 바 */}
       <View style={styles.levelBar}>
@@ -112,7 +112,7 @@ const DeveloperStageScreen = () => {
       <View style={styles.stagesContainer}>
         {stages.map((stage, index) => (
           <View key={index} style={styles.stageCard}>
-            <Image style={styles.stageIcon} source={getBadge()} />
+            <Image style={styles.stageIcon} source={stage.icon} />
             <View style={styles.stageInfo}>
               <Text style={styles.stageTitle}>{stage.title}</Text>
               <Text style={styles.stageLevel}>{stage.level}</Text>
@@ -130,31 +130,31 @@ const stages = [
     title: '입문자',
     level: '1~5 Lev',
     description: '개발 전공을 탐색하며 실력 쌓는 단계',
-    icon: require('../../assets/badge.png'),
+    icon: require('../../assets/badge1.png'),
   },
   {
     title: '인턴 개발자',
     level: '6~10 Lev',
     description: '실무 경험을 쌓는 초보 개발자',
-    icon: require('../../assets/badge.png'),
+    icon: require('../../assets/badge2.png'),
   },
   {
     title: '주니어 개발자',
     level: '11~15 Lev',
     description: '경력이 짧고 경험이 적은 개발자',
-    icon: require('../../assets/badge.png'),
+    icon: require('../../assets/badge3.png'),
   },
   {
     title: '미드레벨 개발자',
     level: '16~20 Lev',
     description: '독립적으로 작업 가능한 중급 개발자',
-    icon: require('../../assets/badge.png'),
+    icon: require('../../assets/badge4.png'),
   },
   {
     title: '시니어 개발자',
     level: '21~25 Lev',
     description: '문제 해결과 팀을 이끄는 고급 개발자',
-    icon: require('../../assets/badge.png'),
+    icon: require('../../assets/badge5.png'),
   },
 ];
 
