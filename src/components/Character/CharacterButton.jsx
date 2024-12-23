@@ -41,8 +41,8 @@ export default function CharacterButton({ navigation, selectedCharacter }) {
         params: { character: { ...selectedCharacter, homeImage } },
       });
     } catch (error) {
-      console.error('데이터 전송 오류:', error);
-      Alert.alert('오류', '미션 데이터를 가져오는 데 실패했습니다.');
+      // console.error('데이터 전송 오류:', error);
+      //Alert.alert('오류', '미션 데이터를 가져오는 데 실패했습니다.');
     }
     // 선택된 캐릭터 데이터와 함께 홈 화면으로 이동
     navigation.navigate('Main', {
