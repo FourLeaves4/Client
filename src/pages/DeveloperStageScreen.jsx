@@ -8,6 +8,8 @@ const DeveloperStageScreen = () => {
   const [remainingLevels, setRemainingLevels] = useState(0); // 다음 단계까지 남은 레벨 수
   const [nextStage, setNextStage] = useState(''); // 다음 단계 이름
 
+  const userId = '1'; // 실제 사용자 ID로 변경
+
   useEffect(() => {
     // 백엔드에서 데이터 받아오기
     fetchBackendData();
@@ -20,12 +22,9 @@ const DeveloperStageScreen = () => {
 
   const fetchBackendData = async () => {
     try {
-      /* // 예시로 하드코딩한 백엔드 응답 데이터
-      const data = {
-        num: 1, // 미션 개수
-        level: 1, // 백엔드에서 받은 현재 레벨
-      }; */
-      const response = await fetch('https://your-backend-url.com/api/data'); // 백엔드 URL에 맞게 수정
+      const response = await fetch(
+        `https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app/home/${userId}/profile/level`
+      ); // 백엔드 URL에 맞게 수정
       const data = await response.json();
 
       const totalMissions = data.num;
