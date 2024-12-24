@@ -12,7 +12,7 @@ const ProfileSection = ({ name, email }) => {
               {/* 이미지 */}
               <Image
                 style={styles.image}
-                source={require('../../assets/프로필.png')}
+                source={require('../../assets/profile1.png')}
               />
               {/* 텍스트 그룹 */}
               <View style={styles.textGroup}>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 100,
     height: 100,
-    top: 0,
+    bottom: 4,
     left: 199,
     resizeMode: 'cover',
   },

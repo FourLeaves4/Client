@@ -17,11 +17,11 @@ export default function ProfileCard() {
       </View>
       <View style={styles.overlapGroup}>
         <Image
-          source={require('../../assets/프로필.png')} // 메인 이미지 경로
+          source={require('../../assets/profile1.png')} // 메인 이미지 경로
           style={styles.image}
         />
-        <Image
-          source={require('../../assets/badge.png')} // 서브 이미지 경로
+        <Image  
+          source={require('../../assets/badge1.png')} // 서브 이미지 경로
           style={styles.element}
         />
       </View>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     width: 65,
     height: 65,
     top: 0,
-    left: 5,
+    left: 8,
     resizeMode: 'cover',
   },
   element: {
