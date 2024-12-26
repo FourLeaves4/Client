@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Image, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import ProfileCard from '../components/ProfileCard';
 import axios from 'axios';
 
@@ -52,7 +52,7 @@ function HomeScreen({ route }) {
 
     // character가 변경될 때마다 실행
     postMajorAndFetchMissions();
-  }, [character]);  // <= 의존성 배열에 character와 userId를 포함
+  }, [character]);
 
   const completeMission = async (missionId) => {
     try {
@@ -104,7 +104,7 @@ function HomeScreen({ route }) {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>미션 로딩 중...</Text>
+        <ActivityIndicator size="large" color="#bdb65b" />
       </View>
     );
   }
@@ -216,12 +216,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#000',
-  },
-  loadingText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+  }
 });
 
 export default HomeScreen;

@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   subText: {
     position: 'absolute',
-    top: 26,
+    top: 26, 
     left: -16,
     fontWeight: '400',
     color: '#acacac',
