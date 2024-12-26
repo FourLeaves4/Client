@@ -20,7 +20,7 @@ export default function MyScreen() {
   useEffect(() => {
     // API 호출 예시 (백엔드 URL에 맞게 수정)
     fetch(
-      `https://port-0-server-lz1cq56f81af005d.sel 4.cloudtype.app/home/${userId}/profile`
+      `https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app/home/${userId}/profile`
     )
       .then((response) => response.json())
       .then((data) => {
