@@ -12,20 +12,20 @@ export default function Start({ navigation }) {
     {
       id: 0,
       src: require('../../assets/1st.png'),
-      title: 'Example Question_1',
-      subtitle: '전공 질문 어쩌구 저쩌구 질문 저쩌구 질문 질문 질문띠',
+      title: 'Embark on Your Journey',
+      subtitle: 'Nova와 함께 재미있게 개발자의 여정을 시작해보세요!',
     },
     {
       id: 1,
       src: require('../../assets/2nd.png'),
-      title: 'Example Question_2',
-      subtitle: '전공 질문 저쩌구 어쩌구 질문 저쩌구 질문 질문 질문띠',
+      title: 'Personalized Missions',
+      subtitle: 'Nova와 함께 나만의 미션으로 즐겁게 성장해보세요!',
     },
     {
       id: 2,
       src: require('../../assets/3rd.png'),
-      title: 'Example Question_3',
-      subtitle: '어쩌구 전공 질문 저쩌구 저쩌구 질문 질문 질문띠',
+      title: 'Grow with Characters',
+      subtitle: 'Nova와 함께 캐릭터로 재미있게 배우고 성장해보세요!',
     },
   ];
 
@@ -92,7 +92,7 @@ export default function Start({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 142,
+    paddingTop: 140,
     flex: 1,
     backgroundColor: '#111111',
     alignItems: 'center',
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden', // 영역 밖 이미지 숨김
   },
   buttonWrapper: {
-    marginTop: 115, // PaginationDots 아래 간격
+    marginTop: 110, // PaginationDots 아래 간격
     alignItems: 'center',
     gap: 14, // 버튼 간 간격
   },
