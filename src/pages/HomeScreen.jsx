@@ -9,8 +9,8 @@ function HomeScreen({ route }) {
 
   const [missions, setMissions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userName, setUserName] = useState(''); // 사용자 이름 상태
-  const [userLevel, setUserLevel] = useState(1); // 사용자 레벨 상태 추가
+  const [userName, setUserName] = useState('');
+  const [userLevel, setUserLevel] = useState(1);
   const BASE_URL = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app';
 
   useEffect(() => {
@@ -30,11 +30,9 @@ function HomeScreen({ route }) {
         const getResponse = await axios.get(`${BASE_URL}/home/${userId}/mission`);
         console.log('GET 요청 응답:', getResponse.data);
 
-        // 사용자 이름과 레벨 상태 업데이트
         setUserName(getResponse.data.name);
-        setUserLevel(getResponse.data.level); // 추가: 사용자 레벨 저장
+        setUserLevel(getResponse.data.level);
 
-        // 미션 데이터 세팅
         const missionData = getResponse.data.mission.map((mission, index) => ({
           id: `M${index}`,
           text: mission,
@@ -50,6 +48,40 @@ function HomeScreen({ route }) {
 
     fetchMissions();
   }, [userId, character, isNewUser]);
+
+  const completeMission = async (missionId) => {
+    try {
+      setMissions((prevMissions) => {
+        const updatedMissions = prevMissions.map((mission) =>
+          mission.id === missionId ? { ...mission, completed: true } : mission
+        );
+
+        const completedMissions = updatedMissions.filter((mission) => mission.completed);
+        const incompleteMissions = updatedMissions.filter((mission) => !mission.completed);
+
+        return [...incompleteMissions, ...completedMissions];
+      });
+
+      console.log(`${missionId} 미션 완료됨`);
+
+      const today = missions.map((mission) =>
+        mission.id === missionId || mission.completed ? 1 : 0
+      );
+
+      console.log('today 배열:', today);
+
+      const requestData = { today };
+      const response = await axios.post(
+        `${BASE_URL}/home/${userId}/mission/value`,
+        requestData,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      console.log('미션 완료 POST 요청 성공:', response.data);
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const handleError = (error) => {
     if (error.response) {
@@ -74,19 +106,33 @@ function HomeScreen({ route }) {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      {/* 상단 캐릭터와 프로필 */}
       <View style={styles.imageWrapper}>
-        {/* ProfileCard에 userName과 userLevel 전달 */}
         <ProfileCard name={userName} level={userLevel} />
         <Image source={character.homeImage} style={styles.image} />
       </View>
 
-      {/* 하단 스크롤 가능한 미션 창 */}
       <View style={styles.missionContainer}>
         <Text style={styles.missionTitle}>미션 리포트</Text>
         {missions.map((mission) => (
           <View key={mission.id} style={styles.missionContent}>
             <Text style={styles.missionText}>{mission.text}</Text>
+            <TouchableOpacity
+              style={[
+                styles.completeButton,
+                mission.completed && styles.completedButton,
+              ]}
+              onPress={() => completeMission(mission.id)}
+              disabled={mission.completed}
+            >
+              <Text
+                style={[
+                  styles.completeText,
+                  mission.completed && styles.completedText,
+                ]}
+              >
+                {mission.completed ? '완료됨' : '완료하기'}
+              </Text>
+            </TouchableOpacity>
           </View>
         ))}
       </View>
@@ -94,23 +140,21 @@ function HomeScreen({ route }) {
   );
 }
 
-
-
 const styles = StyleSheet.create({
   scrollContainer: {
-    flexGrow: 1, // 스크롤 가능한 영역 확장
+    flexGrow: 1,
     backgroundColor: '#000',
-    paddingBottom: 1, // bottomBar 공간만큼 여백 추가
+    paddingBottom: 1,
     marginTop: 24,
   },
   imageWrapper: {
-    alignItems: 'center', // 이미지 가로 정렬
-    marginBottom: 20, // 아래 여백
+    alignItems: 'center',
+    marginBottom: 20,
   },
   image: {
-    width: 200, // 이미지 가로 크기 설정
-    height: 500, // 이미지 세로 크기 설정
-    resizeMode: 'cover', // 비율 유지하며 크기 조정
+    width: 200,
+    height: 500,
+    resizeMode: 'cover',
   },
   missionContainer: {
     width: '98%',
@@ -152,7 +196,7 @@ const styles = StyleSheet.create({
     left: 14,
   },
   completedButton: {
-    backgroundColor: '#555', // 완료된 버튼 색상 변경
+    backgroundColor: '#555',
   },
   completeText: {
     color: 'white',
@@ -160,7 +204,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   completedText: {
-    color: '#aaa', // 완료된 버튼 텍스트 색상 변경
+    color: '#aaa',
   },
   loadingContainer: {
     flex: 1,
