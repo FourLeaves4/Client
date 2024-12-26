@@ -4,19 +4,21 @@ import ProfileCard from '../components/ProfileCard';
 import axios from 'axios';
 
 function HomeScreen({ route }) {
-  const { character, userId: passedUserId, isNewUser } = route.params || {};
-  const userId = passedUserId || 1; // 임시로 1을 기본값으로 사용 (테스트 중)
+  const { character, userId: passedUserId } = route.params || {};
+  const userId = passedUserId || 1; // 임시로 1을 기본값 사용
 
   const [missions, setMissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState('');
   const [userLevel, setUserLevel] = useState(1);
+
   const BASE_URL = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app';
 
   useEffect(() => {
-    const fetchMissions = async () => {
+    const postMajorAndFetchMissions = async () => {
       try {
-        if (isNewUser && character?.major) {
+        // 캐릭터(전공) 정보가 변경될 때마다 POST
+        if (character?.major) {
           console.log('POST 요청 URL:', `${BASE_URL}/home/${userId}/mission`);
           const postResponse = await axios.post(
             `${BASE_URL}/home/${userId}/mission`,
@@ -26,10 +28,12 @@ function HomeScreen({ route }) {
           console.log('POST 요청 응답:', postResponse.data);
         }
 
+        // POST 후에는 항상 GET으로 미션 데이터 받아오기
         console.log('GET 요청 URL:', `${BASE_URL}/home/${userId}/mission`);
         const getResponse = await axios.get(`${BASE_URL}/home/${userId}/mission`);
         console.log('GET 요청 응답:', getResponse.data);
 
+        // 응답 데이터 상태 업데이트
         setUserName(getResponse.data.name);
         setUserLevel(getResponse.data.level);
 
@@ -46,34 +50,35 @@ function HomeScreen({ route }) {
       }
     };
 
-    fetchMissions();
-  }, [userId, character, isNewUser]);
+    // character가 변경될 때마다 실행
+    postMajorAndFetchMissions();
+  }, [character, userId]);  // <= 의존성 배열에 character와 userId를 포함
 
   const completeMission = async (missionId) => {
     try {
+      // 로컬 상태 먼저 업데이트
       setMissions((prevMissions) => {
         const updatedMissions = prevMissions.map((mission) =>
           mission.id === missionId ? { ...mission, completed: true } : mission
         );
 
+        // 완료된 미션을 맨 아래로 보내는 로직(선택 사항)
         const completedMissions = updatedMissions.filter((mission) => mission.completed);
         const incompleteMissions = updatedMissions.filter((mission) => !mission.completed);
-
         return [...incompleteMissions, ...completedMissions];
       });
 
       console.log(`${missionId} 미션 완료됨`);
 
+      // 서버에 완료된 미션 데이터 전달
       const today = missions.map((mission) =>
         mission.id === missionId || mission.completed ? 1 : 0
       );
-
       console.log('today 배열:', today);
 
-      const requestData = { today };
       const response = await axios.post(
         `${BASE_URL}/home/${userId}/mission/value`,
-        requestData,
+        { today },
         { headers: { 'Content-Type': 'application/json' } }
       );
 
@@ -108,7 +113,7 @@ function HomeScreen({ route }) {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.imageWrapper}>
         <ProfileCard name={userName} level={userLevel} />
-        <Image source={character.homeImage} style={styles.image} />
+        <Image source={character?.homeImage} style={styles.image} />
       </View>
 
       <View style={styles.missionContainer}>
