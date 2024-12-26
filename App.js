@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   logoImage: {
-    width: 210,
-    //height: 150,
-    marginBottom: 20,
+    width:160,
+    height: 60,
+    marginBottom: 40,
   },
 });

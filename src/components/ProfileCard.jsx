@@ -2,28 +2,68 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export default function ProfileCard() {
-  const navigation = useNavigation(); // navigation 훅 초기화
+export default function ProfileCard({ name, level }) {
+  const navigation = useNavigation();
+
+  // level에 따라 뱃지와 타이틀 결정
+  const getBadgeAndTitle = (level) => {
+    if (level >= 1 && level <= 5) {
+      return {
+        title: 'Your step is 입문자!',
+        icon: require('../../assets/badge1.png'),
+      };
+    }
+    if (level >= 6 && level <= 10) {
+      return {
+        title: 'Your step is 인턴 개발자',
+        icon: require('../../assets/badge2.png'),
+      };
+    }
+    if (level >= 11 && level <= 15) {
+      return {
+        title: 'Your step is 주니어 개발자!',
+        icon: require('../../assets/badge3.png'),
+      };
+    }
+    if (level >= 16 && level <= 20) {
+      return {
+        title: 'Your step is 미드레벨 개발자!',
+        icon: require('../../assets/badge4.png'),
+      };
+    }
+    if (level >= 21 && level <= 25) {
+      return {
+        title: 'Your step is 시니어 개발자!',
+        icon: require('../../assets/badge5.png'),
+      };
+    }
+    if (level >= 26) {
+      return {
+        title: 'Your step is 최고 레벨!',
+        icon: require('../../assets/badge5.png'),
+      };
+    }
+  };
+
+  const { title, icon } = getBadgeAndTitle(level);
+
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => navigation.navigate('MyScreen')}
     >
       <View style={styles.overlap}>
-        <Text style={styles.textWrapper}>다귀찮을 띄</Text>
+        <Text style={styles.textWrapper}>{name}</Text>
         <Text style={styles.subText} numberOfLines={1} ellipsizeMode="tail">
-          Your Step is Junior Developer!
+          {title}
         </Text>
       </View>
       <View style={styles.overlapGroup}>
         <Image
-          source={require('../../assets/profile1.png')} // 메인 이미지 경로
+          source={require('../../assets/profile1.png')}
           style={styles.image}
         />
-        <Image  
-          source={require('../../assets/badge1.png')} // 서브 이미지 경로
-          style={styles.element}
-        />
+        <Image source={icon} style={styles.element} />
       </View>
     </TouchableOpacity>
   );
@@ -39,7 +79,7 @@ const styles = StyleSheet.create({
   },
   overlap: {
     position: 'absolute',
-    width: 159, // 기존 너비 유지
+    width: 159,
     height: 48,
     top: 12,
     left: 75,
@@ -49,7 +89,6 @@ const styles = StyleSheet.create({
     width: 101,
     top: 0,
     left: 0,
-    fontFamily: 'Pretendard-SemiBold',
     fontWeight: '600',
     color: '#ffffff',
     fontSize: 16,
@@ -58,16 +97,14 @@ const styles = StyleSheet.create({
   },
   subText: {
     position: 'absolute',
-    top: 26, // 살짝 조정
-    left: 12,
-    fontFamily: 'Jaro-Regular',
+    top: 26,
+    left: -5,
     fontWeight: '400',
     color: '#acacac',
-    fontSize: 12.5, // 폰트 크기 살짝 줄임
+    fontSize: 12.5,
     textAlign: 'center',
     lineHeight: 14,
-    width: '100%', // 부모 컨테이너 너비에 맞춤
-    whiteSpace: 'nowrap', // 줄바꿈 방지
+    width: '100%',
   },
   overlapGroup: {
     position: 'absolute',
