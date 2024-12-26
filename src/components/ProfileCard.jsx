@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   subText: {
     position: 'absolute',
     top: 26,
-    left: -5,
+    left: -16,
     fontWeight: '400',
     color: '#acacac',
     fontSize: 12.5,
