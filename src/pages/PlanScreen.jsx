@@ -16,7 +16,6 @@ const PlanScreen = () => {
 
   const fetchHighlightData = async () => {
     try {
-      // 사용자 ID를 동적으로 설정 (예: userId 변수를 통해)
       const userId = '1'; // 실제 사용자 ID로 대체
       // 🔥 백엔드 API URL (실제 서버 주소로 교체)
       const response = await fetch(
