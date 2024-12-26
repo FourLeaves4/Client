@@ -4,32 +4,36 @@ import ProfileCard from '../components/ProfileCard';
 import axios from 'axios';
 
 function HomeScreen({ route }) {
-  const { character, userId } = route.params || {};
+  const { character, userId: passedUserId, isNewUser } = route.params || {}; // userId와 isNewUser를 전달받음
+  const userId = passedUserId || 1; // 임시로 1을 기본값으로 사용 (테스트 중)
 
-  console.log('전달받은 캐릭터 데이터:', character);
-
-  const [missions, setMissions] = useState([]); // 초기 미션 데이터 비워두기
+  const [missions, setMissions] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [userName, setUserName] = useState(''); // 추가: 사용자 이름 상태
   const BASE_URL = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app';
 
+  // 미션 데이터 가져오기
   useEffect(() => {
-    const postMajorAndFetchMissions = async () => {
+    const fetchMissions = async () => {
       try {
-        // POST 요청
-        console.log('POST 요청 URL:', `${BASE_URL}/home/${userId || 1}/mission`);
-        const postResponse = await axios.post(
-          `${BASE_URL}/home/${userId || 1}/mission`,
-          { major: character.major }, // major 값 전달
-          { headers: { 'Content-Type': 'application/json' } }
-        );
-        console.log('POST 요청 응답:', postResponse.data);
-    
-        // GET 요청
-        console.log('GET 요청 URL:', `${BASE_URL}/home/${userId || 1}/mission`);
-        const getResponse = await axios.get(`${BASE_URL}/home/${userId || 1}/mission`);
+        if (isNewUser && character?.major) {
+          console.log('POST 요청 URL:', `${BASE_URL}/home/${userId}/mission`);
+          const postResponse = await axios.post(
+            `${BASE_URL}/home/${userId}/mission`,
+            { major: character.major },
+            { headers: { 'Content-Type': 'application/json' } }
+          );
+          console.log('POST 요청 응답:', postResponse.data);
+        }
+
+        console.log('GET 요청 URL:', `${BASE_URL}/home/${userId}/mission`);
+        const getResponse = await axios.get(`${BASE_URL}/home/${userId}/mission`);
         console.log('GET 요청 응답:', getResponse.data);
-    
+
+        // 사용자 이름 상태 업데이트
+        setUserName(getResponse.data.name);
+
+        // 미션 데이터 세팅
         const missionData = getResponse.data.mission.map((mission, index) => ({
           id: `M${index}`,
           text: mission,
@@ -37,50 +41,61 @@ function HomeScreen({ route }) {
         }));
         setMissions(missionData);
       } catch (error) {
-        if (error.response) {
-          console.error('응답 오류:', error.response.data);
-          Alert.alert('오류', `서버 오류: ${error.response.data.message || '요청 실패'}`);
-        } else if (error.request) {
-          console.error('요청 오류:', error.request);
-          Alert.alert('오류', '서버에 응답이 없습니다. 네트워크를 확인하세요.');
-        } else {
-          console.error('설정 오류:', error.message);
-          Alert.alert('오류', '요청을 보내는 중 문제가 발생했습니다.');
-        }
+        handleError(error);
       } finally {
         setLoading(false);
       }
     };
-    
-  
-    if (character && character.major) {
-      postMajorAndFetchMissions();
-    }
-  }, [userId, character]);
-  
 
-  if (!character) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>캐릭터가 선택되지 않았습니다.</Text>
-      </View>
-    );
-  }
+    fetchMissions();
+  }, [userId, character, isNewUser]);
 
   // 미션 완료 처리
-  const completeMission = (missionId) => {
-    setMissions((prevMissions) => {
-      const updatedMissions = prevMissions.map((mission) =>
-        mission.id === missionId ? { ...mission, completed: true } : mission
+  const completeMission = async (missionId) => {
+    try {
+      setMissions((prevMissions) => {
+        const updatedMissions = prevMissions.map((mission) =>
+          mission.id === missionId ? { ...mission, completed: true } : mission
+        );
+
+        const completedMissions = updatedMissions.filter((mission) => mission.completed);
+        const incompleteMissions = updatedMissions.filter((mission) => !mission.completed);
+
+        return [...incompleteMissions, ...completedMissions];
+      });
+
+      console.log(`${missionId} 미션 완료됨`);
+
+      const today = missions.map((mission) =>
+        mission.id === missionId || mission.completed ? 1 : 0
       );
 
-      // 완료된 미션을 맨 아래로 이동
-      const completedMissions = updatedMissions.filter((mission) => mission.completed);
-      const incompleteMissions = updatedMissions.filter((mission) => !mission.completed);
+      console.log('today 배열:', today);
 
-      console.log(`${missionId} 미션 완료됨`); // 터미널 출력
-      return [...incompleteMissions, ...completedMissions];
-    });
+      const requestData = { today };
+      const response = await axios.post(
+        `${BASE_URL}/home/${userId}/mission/value`,
+        requestData,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      console.log('미션 완료 POST 요청 성공:', response.data);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const handleError = (error) => {
+    if (error.response) {
+      console.error('응답 오류:', error.response.data);
+      Alert.alert('오류', `서버 오류: ${error.response.data.message || '요청 실패'}`);
+    } else if (error.request) {
+      console.error('요청 오류:', error.request);
+      Alert.alert('오류', '서버에 응답이 없습니다. 네트워크를 확인하세요.');
+    } else {
+      console.error('설정 오류:', error.message);
+      Alert.alert('오류', '요청을 보내는 중 문제가 발생했습니다.');
+    }
   };
 
   if (loading) {
@@ -95,7 +110,8 @@ function HomeScreen({ route }) {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       {/* 상단 캐릭터와 프로필 */}
       <View style={styles.imageWrapper}>
-        <ProfileCard />
+        {/* ProfileCard에 userName 전달 */}
+        <ProfileCard name={userName} />
         <Image source={character.homeImage} style={styles.image} />
       </View>
 
@@ -111,7 +127,7 @@ function HomeScreen({ route }) {
                 mission.completed && styles.completedButton,
               ]}
               onPress={() => completeMission(mission.id)}
-              disabled={mission.completed} // 완료된 미션은 버튼 비활성화
+              disabled={mission.completed}
             >
               <Text
                 style={[
@@ -128,6 +144,7 @@ function HomeScreen({ route }) {
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   scrollContainer: {

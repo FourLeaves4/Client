@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export default function ProfileCard() {
+export default function ProfileCard({ name }) {
   const navigation = useNavigation(); // navigation 훅 초기화
   return (
     <TouchableOpacity
@@ -10,7 +10,8 @@ export default function ProfileCard() {
       onPress={() => navigation.navigate('MyScreen')}
     >
       <View style={styles.overlap}>
-        <Text style={styles.textWrapper}>다귀찮을 띄</Text>
+        {/* name 값을 표시 */}
+        <Text style={styles.textWrapper}>{name}</Text>
         <Text style={styles.subText} numberOfLines={1} ellipsizeMode="tail">
           Your Step is Junior Developer!
         </Text>
@@ -20,7 +21,7 @@ export default function ProfileCard() {
           source={require('../../assets/profile1.png')} // 메인 이미지 경로
           style={styles.image}
         />
-        <Image  
+        <Image
           source={require('../../assets/badge1.png')} // 서브 이미지 경로
           style={styles.element}
         />
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
   },
   overlap: {
     position: 'absolute',
-    width: 159, // 기존 너비 유지
+    width: 159,
     height: 48,
     top: 12,
     left: 75,
@@ -58,16 +59,16 @@ const styles = StyleSheet.create({
   },
   subText: {
     position: 'absolute',
-    top: 26, // 살짝 조정
+    top: 26,
     left: 12,
     fontFamily: 'Jaro-Regular',
     fontWeight: '400',
     color: '#acacac',
-    fontSize: 12.5, // 폰트 크기 살짝 줄임
+    fontSize: 12.5,
     textAlign: 'center',
     lineHeight: 14,
-    width: '100%', // 부모 컨테이너 너비에 맞춤
-    whiteSpace: 'nowrap', // 줄바꿈 방지
+    width: '100%',
+    whiteSpace: 'nowrap',
   },
   overlapGroup: {
     position: 'absolute',
