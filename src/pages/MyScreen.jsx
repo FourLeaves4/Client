@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  RefreshControl,
+} from 'react-native';
 import ProfileSection from '../components/profileSection';
 import LevelBarSection from '../components/LevelBarSection';
 import LevelLabel from '../components/LevelLabel';
@@ -15,9 +21,10 @@ export default function MyScreen() {
   // 🔥 백엔드 API URL (실제 서버 주소로 교체)
   // 상태로 백엔드 데이터를 저장할 변수 설정
   const [profileData, setProfileData] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // useEffect를 사용하여 컴포넌트가 마운트될 때 데이터 로드
-  useEffect(() => {
+  const loadData = () => {
+    setIsRefreshing(true); // 새로고침 시작
     // API 호출 예시 (백엔드 URL에 맞게 수정)
     fetch(
       `https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app/home/${userId}/profile`
@@ -25,10 +32,16 @@ export default function MyScreen() {
       .then((response) => response.json())
       .then((data) => {
         setProfileData(data); // 데이터를 상태에 저장
+        setIsRefreshing(false); // 새로고침 종료
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
+        setIsRefreshing(false); // 새로고침 종료
       });
+  };
+  // useEffect를 사용하여 컴포넌트가 마운트될 때 데이터 로드
+  useEffect(() => {
+    loadData();
   }, []);
 
   // 데이터가 없으면 로딩 중 표시
@@ -36,7 +49,15 @@ export default function MyScreen() {
     return <Text>Loading...</Text>;
   }
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={loadData} // 새로고침 시 loadData 함수 호출
+        />
+      }
+    >
       <View style={styles.container}>
         {/* 상단 섹션: ProfileSection + LevelBarSection */}
         <View style={styles.topSection}>
