@@ -4,15 +4,15 @@ import ProfileCard from '../components/ProfileCard';
 import axios from 'axios';
 
 function HomeScreen({ route }) {
-  const { character, userId: passedUserId, isNewUser } = route.params || {}; // userId와 isNewUser를 전달받음
+  const { character, userId: passedUserId, isNewUser } = route.params || {};
   const userId = passedUserId || 1; // 임시로 1을 기본값으로 사용 (테스트 중)
 
   const [missions, setMissions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userName, setUserName] = useState(''); // 추가: 사용자 이름 상태
+  const [userName, setUserName] = useState(''); // 사용자 이름 상태
+  const [userLevel, setUserLevel] = useState(1); // 사용자 레벨 상태 추가
   const BASE_URL = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app';
 
-  // 미션 데이터 가져오기
   useEffect(() => {
     const fetchMissions = async () => {
       try {
@@ -30,8 +30,9 @@ function HomeScreen({ route }) {
         const getResponse = await axios.get(`${BASE_URL}/home/${userId}/mission`);
         console.log('GET 요청 응답:', getResponse.data);
 
-        // 사용자 이름 상태 업데이트
+        // 사용자 이름과 레벨 상태 업데이트
         setUserName(getResponse.data.name);
+        setUserLevel(getResponse.data.level); // 추가: 사용자 레벨 저장
 
         // 미션 데이터 세팅
         const missionData = getResponse.data.mission.map((mission, index) => ({
@@ -49,41 +50,6 @@ function HomeScreen({ route }) {
 
     fetchMissions();
   }, [userId, character, isNewUser]);
-
-  // 미션 완료 처리
-  const completeMission = async (missionId) => {
-    try {
-      setMissions((prevMissions) => {
-        const updatedMissions = prevMissions.map((mission) =>
-          mission.id === missionId ? { ...mission, completed: true } : mission
-        );
-
-        const completedMissions = updatedMissions.filter((mission) => mission.completed);
-        const incompleteMissions = updatedMissions.filter((mission) => !mission.completed);
-
-        return [...incompleteMissions, ...completedMissions];
-      });
-
-      console.log(`${missionId} 미션 완료됨`);
-
-      const today = missions.map((mission) =>
-        mission.id === missionId || mission.completed ? 1 : 0
-      );
-
-      console.log('today 배열:', today);
-
-      const requestData = { today };
-      const response = await axios.post(
-        `${BASE_URL}/home/${userId}/mission/value`,
-        requestData,
-        { headers: { 'Content-Type': 'application/json' } }
-      );
-
-      console.log('미션 완료 POST 요청 성공:', response.data);
-    } catch (error) {
-      handleError(error);
-    }
-  };
 
   const handleError = (error) => {
     if (error.response) {
@@ -110,8 +76,8 @@ function HomeScreen({ route }) {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       {/* 상단 캐릭터와 프로필 */}
       <View style={styles.imageWrapper}>
-        {/* ProfileCard에 userName 전달 */}
-        <ProfileCard name={userName} />
+        {/* ProfileCard에 userName과 userLevel 전달 */}
+        <ProfileCard name={userName} level={userLevel} />
         <Image source={character.homeImage} style={styles.image} />
       </View>
 
@@ -121,29 +87,13 @@ function HomeScreen({ route }) {
         {missions.map((mission) => (
           <View key={mission.id} style={styles.missionContent}>
             <Text style={styles.missionText}>{mission.text}</Text>
-            <TouchableOpacity
-              style={[
-                styles.completeButton,
-                mission.completed && styles.completedButton,
-              ]}
-              onPress={() => completeMission(mission.id)}
-              disabled={mission.completed}
-            >
-              <Text
-                style={[
-                  styles.completeText,
-                  mission.completed && styles.completedText,
-                ]}
-              >
-                {mission.completed ? '완료됨' : '완료하기'}
-              </Text>
-            </TouchableOpacity>
           </View>
         ))}
       </View>
     </ScrollView>
   );
 }
+
 
 
 const styles = StyleSheet.create({
