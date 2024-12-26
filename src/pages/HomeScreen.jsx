@@ -52,7 +52,7 @@ function HomeScreen({ route }) {
 
     // character가 변경될 때마다 실행
     postMajorAndFetchMissions();
-  }, [character, userId]);  // <= 의존성 배열에 character와 userId를 포함
+  }, [character]);  // <= 의존성 배열에 character와 userId를 포함
 
   const completeMission = async (missionId) => {
     try {
