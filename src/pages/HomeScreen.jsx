@@ -153,7 +153,7 @@ function HomeScreen({ route }) {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.imageWrapper}>
         <ProfileCard name={userName} level={userLevel} />
-        <TouchableOpacity onPress={handleCharacterPress}>
+        <TouchableOpacity onPress={handleCharacterPress} activeOpacity={1}>
           <Image source={character?.homeImage} style={styles.image} />
         </TouchableOpacity>
         {showSpeechBubble && (
