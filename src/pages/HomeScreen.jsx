@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import ProfileCard from '../components/ProfileCard';
 import axios from 'axios';
 
@@ -11,6 +20,8 @@ function HomeScreen({ route }) {
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState('');
   const [userLevel, setUserLevel] = useState(1);
+  const [showSpeechBubble, setShowSpeechBubble] = useState(false); // 말풍선 표시 여부
+  const [speechText, setSpeechText] = useState('안녕하세요!'); // 말풍선 텍스트
 
   const BASE_URL = 'https://port-0-server-lz1cq56f81af005d.sel4.cloudtype.app';
 
@@ -30,7 +41,9 @@ function HomeScreen({ route }) {
 
         // POST 후에는 항상 GET으로 미션 데이터 받아오기
         console.log('GET 요청 URL:', `${BASE_URL}/home/${userId}/mission`);
-        const getResponse = await axios.get(`${BASE_URL}/home/${userId}/mission`);
+        const getResponse = await axios.get(
+          `${BASE_URL}/home/${userId}/mission`
+        );
         console.log('GET 요청 응답:', getResponse.data);
 
         // 응답 데이터 상태 업데이트
@@ -63,8 +76,12 @@ function HomeScreen({ route }) {
         );
 
         // 완료된 미션을 맨 아래로 보내는 로직(선택 사항)
-        const completedMissions = updatedMissions.filter((mission) => mission.completed);
-        const incompleteMissions = updatedMissions.filter((mission) => !mission.completed);
+        const completedMissions = updatedMissions.filter(
+          (mission) => mission.completed
+        );
+        const incompleteMissions = updatedMissions.filter(
+          (mission) => !mission.completed
+        );
         return [...incompleteMissions, ...completedMissions];
       });
 
@@ -88,10 +105,33 @@ function HomeScreen({ route }) {
     }
   };
 
+  const handleCharacterPress = () => {
+    // 랜덤 텍스트 설정
+    const texts = [
+      '오늘의 미션을 확인해 보세요!',
+      '잘했어요!',
+      '파이팅!',
+      '할 수 있다!',
+    ];
+    const randomText = texts[Math.floor(Math.random() * texts.length)];
+    setSpeechText(randomText);
+
+    // 말풍선 표시
+    setShowSpeechBubble(true);
+
+    // 3초 후에 말풍선 숨기기
+    setTimeout(() => {
+      setShowSpeechBubble(false);
+    }, 4000);
+  };
+
   const handleError = (error) => {
     if (error.response) {
       console.error('응답 오류:', error.response.data);
-      Alert.alert('오류', `서버 오류: ${error.response.data.message || '요청 실패'}`);
+      Alert.alert(
+        '오류',
+        `서버 오류: ${error.response.data.message || '요청 실패'}`
+      );
     } else if (error.request) {
       console.error('요청 오류:', error.request);
       Alert.alert('오류', '서버에 응답이 없습니다. 네트워크를 확인하세요.');
@@ -113,7 +153,42 @@ function HomeScreen({ route }) {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.imageWrapper}>
         <ProfileCard name={userName} level={userLevel} />
-        <Image source={character?.homeImage} style={styles.image} />
+        <TouchableOpacity onPress={handleCharacterPress} activeOpacity={1}>
+          <Image source={character?.homeImage} style={styles.image} />
+        </TouchableOpacity>
+        {showSpeechBubble && (
+          <View
+            style={[
+              styles.speechBubble,
+              {
+                width:
+                  speechText.length < 10
+                    ? speechText.length < 5
+                      ? 85
+                      : 110
+                    : speechText.length * 10,
+              },
+              {
+                right:
+                  speechText.length < 10
+                    ? speechText.length < 5
+                      ? 40
+                      : 30
+                    : 230,
+              },
+              {
+                bottom:
+                  speechText.length < 10
+                    ? speechText.length < 5
+                      ? 450
+                      : 310
+                    : 290,
+              },
+            ]}
+          >
+            <Text style={styles.speechText}>{speechText}</Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.missionContainer}>
@@ -160,6 +235,27 @@ const styles = StyleSheet.create({
     width: 200,
     height: 500,
     resizeMode: 'cover',
+  },
+  speechBubble: {
+    position: 'absolute',
+    //bottom: 450, // 캐릭터의 높이에 따라 조정
+    backgroundColor: '#2B2A2A',
+    borderRadius: 10,
+    paddingVertical: 10, // 세로 여백
+    paddingHorizontal: 20, // 가로 여백 추가
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  speechText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '460',
+    textAlign: 'center', // 텍스트를 중앙 정렬
   },
   missionContainer: {
     width: '98%',
@@ -216,7 +312,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#000',
-  }
+  },
 });
 
 export default HomeScreen;
