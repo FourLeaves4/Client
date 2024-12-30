@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     //bottom: 450, // 캐릭터의 높이에 따라 조정
     backgroundColor: '#2B2A2A',
-    borderRadius: 30,
+    borderRadius: 10,
     paddingVertical: 10, // 세로 여백
     paddingHorizontal: 20, // 가로 여백 추가
     alignItems: 'center',
@@ -254,6 +254,7 @@ const styles = StyleSheet.create({
   speechText: {
     color: '#fff',
     fontSize: 14,
+    fontWeight: '460',
     textAlign: 'center', // 텍스트를 중앙 정렬
   },
   missionContainer: {
